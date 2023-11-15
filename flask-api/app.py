@@ -5,8 +5,8 @@ app = Flask(__name__)
  
 @app.route('/')
 def index():
-    return 'Hello Here is our Flask API for Optimize the Drive!! \n'
+    return '<h1>Hello from our flask server!</h1>'
  
 # main driver function
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True, host="0.0.0.0")

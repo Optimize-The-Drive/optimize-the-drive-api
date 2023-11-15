@@ -1,0 +1,10 @@
+# docker-compose.yaml
+version: '3'
+
+services:
+  web:
+    build: '../flask-api'
+    ports:
+      - '5001:5000'
+    volumes:
+      - ../flask-api:/app
