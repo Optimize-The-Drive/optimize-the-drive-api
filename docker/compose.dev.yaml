@@ -3,6 +3,8 @@ version: '3'
 
 services:
   web:
+    image: flask-api
+    container_name: flask-api
     build: '../flask-api'
     ports:
       - '5001:5000'
