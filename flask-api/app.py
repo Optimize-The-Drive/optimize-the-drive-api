@@ -6,7 +6,7 @@ def index():
     """Root API ROUTE
 
     Returns:
-        String: Just a Hello Protected world string!
+        String: Just a Hello world string!
     """
     return '<h1>Hello from our flask server!</h1>'
 # main driver function
