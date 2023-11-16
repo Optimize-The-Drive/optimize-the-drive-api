@@ -1,2 +1,4 @@
 Flask
 pylint
+pytest
+pytest-cov
