@@ -17,7 +17,7 @@ jobs:
       run: groups
 
     - name: Verify Docker
-      run: sudo docker run hello-world
+      run: docker run hello-world
       
     - name: Build the Docker image
       run: docker compose -f docker/compose.dev.yaml up -d
