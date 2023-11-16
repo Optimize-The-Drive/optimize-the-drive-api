@@ -9,13 +9,13 @@ on:
 jobs:
   build:
     runs-on: [self-hosted]
+    container:
+      options: --user root
     steps:
     - uses: actions/checkout@v3
   
     - name: Install Docker
-    # You may pin to the exact commit or the version.
-    # uses: papodaca/install-docker-action@6689d765bf69e0b79e9352e11203caf4acd1d25c
-      uses: papodaca/install-docker-action@v1
+      run: sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
           
       
     - name: Build the Docker image
