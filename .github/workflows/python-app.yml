@@ -28,7 +28,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-   
+    - name: Set Pypath
+      run: |
+        echo "::set-env name=PYTHONPATH::home/runner/work/optimize-the-drive"
     - name: Test with pytest
       run: |
+        sys.path.append('/path/to/whatever')
         pytest flask-api/
