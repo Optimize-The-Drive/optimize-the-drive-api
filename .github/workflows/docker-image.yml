@@ -19,4 +19,4 @@ jobs:
       
 
     - name: Run Tests
-      run: docker exec -it flask-api /bin/sh -c "pytest"
+      run: docker exec flask-api /bin/sh -c "pytest"
