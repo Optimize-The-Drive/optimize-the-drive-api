@@ -22,7 +22,7 @@ jobs:
       run: docker exec flask-api /bin/sh -c "pytest"
 
     pip-audit:
-    steps:
-      - uses: pypa/gh-action-pip-audit@v1.0.0
-        with:
-          inputs: requirements.txt
+      steps:
+        - uses: pypa/gh-action-pip-audit@v1.0.0
+          with:
+            inputs: requirements.txt
