@@ -14,6 +14,11 @@ jobs:
 
     steps:
     
+    - uses: actions/checkout@v3
+    - name: run pwd
+      run: pwd
+           ls
+      
     
     - name: gh-action-pip-audit
       uses: pypa/gh-action-pip-audit@v1.0.8
