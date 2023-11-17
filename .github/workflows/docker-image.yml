@@ -1,0 +1,22 @@
+name: Docker Image CI
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+jobs:
+  build:
+    runs-on: [self-hosted]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Docker
+      run: apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+          
+      
+    - name: Build the Docker image
+      run: docker compose -f docker/compose.dev.yaml up -d
+      
+    - name: Run Tests
+      run: docker exec flask-api /bin/sh -c "pytest"
