@@ -21,10 +21,6 @@ jobs:
     - name: Run Tests
       run: docker exec flask-api /bin/sh -c "pytest"
 
-    - name: gh-action-pip-audit
-      uses: pypa/gh-action-pip-audit@v1.0.8
-      with:
-        inputs: flask-api/requirements.txt
 
   Audit:
     runs-on: ubuntu-latest
