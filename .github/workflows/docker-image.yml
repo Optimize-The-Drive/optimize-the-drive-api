@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  Build:
+  Build-Test:
 
     runs-on: ubuntu-latest
 
@@ -25,6 +25,15 @@ jobs:
       uses: pypa/gh-action-pip-audit@v1.0.8
       with:
         inputs: flask-api/requirements.txt
-  
+
+  Audit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: gh-action-pip-audit
+      uses: pypa/gh-action-pip-audit@v1.0.8
+      with:
+        inputs: flask-api/requirements.txt
 
     
