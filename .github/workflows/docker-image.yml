@@ -15,22 +15,15 @@ jobs:
     steps:
     
     - uses: actions/checkout@v3
-    - name: run pwd
-      run: pwd
-           ls
+    - name: Build the Docker image
+      run: docker compose -f docker/compose.dev.yaml up -d
       
-    
+    - name: Run Tests
+      run: docker exec flask-api /bin/sh -c "pytest"
+
     - name: gh-action-pip-audit
       uses: pypa/gh-action-pip-audit@v1.0.8
       with:
         inputs: flask-api/requirements.txt
-
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker compose -f docker/compose.dev.yaml up -d
-      
-
-    - name: Run Tests
-      run: docker exec flask-api /bin/sh -c "pytest"
 
     
