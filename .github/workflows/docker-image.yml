@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: gh-action-pip-audit
+      uses: pypa/gh-action-pip-audit@v1.0.8
+
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker compose -f docker/compose.dev.yaml up -d
@@ -21,8 +24,4 @@ jobs:
     - name: Run Tests
       run: docker exec flask-api /bin/sh -c "pytest"
 
-    pip-audit:
-      steps:
-        - uses: pypa/gh-action-pip-audit@v1.0.0
-          with:
-            inputs: requirements.txt
+    
