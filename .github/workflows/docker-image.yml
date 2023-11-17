@@ -7,18 +7,13 @@ on:
     branches: [ "dev" ]
 
 jobs:
+
   build:
-    runs-on: [self-hosted]
-    
+
+    runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v3
-  
-    - name: Check Group
-      run: groups
-
-    - name: Verify Docker
-      run: docker run hello-world
-      
     - name: Build the Docker image
       run: docker compose -f docker/compose.dev.yaml up -d
       
