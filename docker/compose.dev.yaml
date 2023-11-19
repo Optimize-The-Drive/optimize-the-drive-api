@@ -2,7 +2,7 @@
 version: '3'
 
 services:
-  web:
+  api:
     image: flask-api
     container_name: flask-api
     build: '../flask-api'
