@@ -1,4 +1,5 @@
 Flask
+gunicorn
 pylint
 pytest
 pytest-cov
