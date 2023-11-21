@@ -9,15 +9,13 @@ on:
 jobs:
 
   Build-Test:
-
+    environment: ci
     runs-on: ubuntu-latest
 
     steps:
-
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker compose -f docker/compose.dev.yaml up -d
-      
+      run: echo $ {{ secrets.SECRET_CI_KEY }} && docker compose -f docker/compose.dev.yaml up -d
     - name: Run Tests
       run: docker exec flask-api /bin/sh -c "pytest"
 
