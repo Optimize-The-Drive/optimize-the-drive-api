@@ -12,3 +12,4 @@ services:
       PYTHONPATH: /app
     volumes:
       - ../flask-api:/app
+    env_file: ../flask-api/.env
