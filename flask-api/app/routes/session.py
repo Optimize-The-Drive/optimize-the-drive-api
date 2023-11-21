@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 
 
 session_routes = Blueprint("session", __name__, url_prefix="/session")
@@ -8,4 +8,4 @@ def login():
     """
         TODO: MAKE ACTUAL REQUEST A POST REQ
     """
-    return '<p>You hit the login route</p>'
+    return jsonify({'res': 'you hit the login!'})
