@@ -1,4 +1,8 @@
-from flask import Blueprint
+'''
+    All routes are assigned to the base API blueprint in
+    this file.
+'''
+from flask import Blueprint, jsonify
 from app.routes.session import session_routes
 
 api_routes = Blueprint("api", __name__, url_prefix="/api")
@@ -11,4 +15,4 @@ def index():
     Returns:
         String: Home endpoint
     """
-    return '<h1>Hello from our flask server!</h1>'
+    return jsonify({'res': 'Hellow from flawsk swerver'}), 200

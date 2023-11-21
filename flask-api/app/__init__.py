@@ -1,13 +1,11 @@
 '''
     Creates an instance of the flask application
 '''
-from flask import Flask
+from flask import Flask, jsonify
 from app.routes import api_routes
 from config import get_environment
 
-api_env = get_environment()
-
-def create_app(config=api_env):
+def create_app(config=get_environment()):
     '''
         Creates an instance of the Flask App
     '''
@@ -24,4 +22,7 @@ def register_error_routes(app):
     '''
     @app.errorhandler(404)
     def not_found(e):
-        return 'Not Found :/'
+        response_data = {
+            'res': 'not found'
+        }
+        return jsonify(response_data), 404

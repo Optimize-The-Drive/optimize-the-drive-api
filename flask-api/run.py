@@ -1,3 +1,7 @@
+
+'''
+  Runs the server in development mode.
+'''
 from server import app
 
 # main driver function for dev mode

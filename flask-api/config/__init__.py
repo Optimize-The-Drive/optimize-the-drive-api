@@ -34,9 +34,9 @@ def get_environment():
         Returns the appropriate environment configuration.
     '''
     env = os.getenv('ENV_TYPE')
-    print(env)
 
     if env == 'dev':
         return DevConfig
     elif env == 'test':
         return TestConfig 
+    
