@@ -21,7 +21,7 @@ def register_error_routes(app):
         Assigns handlers for common API error codes.
     '''
     @app.errorhandler(404)
-    def not_found(e):
+    def not_found(_e):
         response_data = {
             'res': 'not found'
         }
