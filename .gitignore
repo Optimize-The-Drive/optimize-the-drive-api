@@ -1,5 +1,7 @@
 __pycache__/
+.pytest_cache
 *.py[cod]
 .env
 venv/
 .coverage
+db_data
