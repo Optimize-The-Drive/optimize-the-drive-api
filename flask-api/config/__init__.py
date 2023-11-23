@@ -34,7 +34,6 @@ def get_environment():
         Returns the appropriate environment configuration.
     '''
     env = os.getenv('ENV_TYPE')
-    
     test = os.getenv('SECRET_1')
     test1 = os.getenv('SECRET_CI_KEY')
     print(test, test1)
@@ -42,5 +41,5 @@ def get_environment():
     if env == 'dev':
         return DevConfig
     elif env == 'test':
-        return TestConfig 
+        return TestConfig
     

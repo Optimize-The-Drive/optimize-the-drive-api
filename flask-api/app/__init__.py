@@ -26,3 +26,4 @@ def register_error_routes(app):
             'res': 'not found'
         }
         return jsonify(response_data), 404
+        
