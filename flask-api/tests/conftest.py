@@ -5,7 +5,7 @@ from app import create_app # pylint: disable=E0401
 
 
 @pytest.fixture
-def test_app_fixture():
+def test_app():
     """Create and configure a new app instance for each test."""
     # create the app with common test config
     app = create_app()
