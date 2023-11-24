@@ -9,7 +9,7 @@ basedir = os.path.abspath(os.path.dirname(__name__))
 dotenv_path = os.path.join(basedir, '.env')
 load_dotenv(dotenv_path)
 
-class Config(object):
+class Config():
     '''
         Shared config across all environments
     '''
@@ -40,6 +40,6 @@ def get_environment():
 
     if env == 'dev':
         return DevConfig
-    elif env == 'test':
+    if env == 'test':
         return TestConfig
-    
+    return Config
