@@ -2,12 +2,12 @@
     Creates an instance of the flask application
 '''
 from flask import Flask, jsonify
-from app.routes import api_routes
-from config import get_environment
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from app.routes import api_routes
+from app.models import *
+from config import get_environment
+from database import db
 
-db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app(config=get_environment()):
@@ -22,7 +22,7 @@ def create_app(config=get_environment()):
     # Initialize Database
     db.init_app(app)
     db.app = app
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, compare_type=True)
 
     return app
 
