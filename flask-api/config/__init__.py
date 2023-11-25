@@ -38,8 +38,7 @@ def get_environment():
     test1 = os.getenv('SECRET_CI_KEY')
     print(test, test1)
 
-    if env == 'dev':
-        return DevConfig
     if env == 'test':
         return TestConfig
-    return Config
+
+    return DevConfig
