@@ -4,6 +4,11 @@
 from flask import Flask, jsonify
 from app.routes import api_routes
 from config import get_environment
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app(config=get_environment()):
     '''
@@ -13,6 +18,11 @@ def create_app(config=get_environment()):
     app.config.from_object(config)
     app.register_blueprint(api_routes)
     register_error_routes(app)
+
+    # Initialize Database
+    db.init_app(app)
+    db.app = app
+    migrate.init_app(app, db)
 
     return app
 

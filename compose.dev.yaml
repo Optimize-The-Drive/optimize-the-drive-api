@@ -5,20 +5,21 @@ services:
   api:
     image: flask-api
     container_name: flask-api
-    build: '../flask-api'
+    command: 'python manage.py run -h 0.0.0.0 --debug'
+    build: 'flask-api/'
     ports:
       - '5001:5000'
     environment:
       PYTHONPATH: /app
     volumes:
-      - ../flask-api:/app
-    env_file: ../flask-api/.env
+      - ./flask-api:/app
+    env_file: ./flask-api/.env 
     depends_on:
       - db
   db:
     image: postgres:16
+    ports:
+      - '5432:5432'
     volumes:
-      - ../flask-api/db_data:/var/lib/postgresql/data
-    env_file: ../flask-api/.env  
-volumes:
-  db_data:
+      - ./pg_data:/var/lib/postgresql/data
+    env_file: ./flask-api/.env  

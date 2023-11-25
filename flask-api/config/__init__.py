@@ -14,7 +14,7 @@ class Config(object):
         Shared config across all environments
     '''
     SECRET_KEY = os.getenv('SECRET_KEY')
-    POSTGRES_URL = os.getenv('POSTGRES_URL')
+    SQLALCHEMY_DATABASE_URI = os.getenv('POSTGRES_URL')
 
 class DevConfig(Config):
     '''

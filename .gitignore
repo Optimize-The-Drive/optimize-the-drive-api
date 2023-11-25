@@ -4,4 +4,4 @@ __pycache__/
 .env
 venv/
 .coverage
-db_data
+pg_data
