@@ -5,6 +5,7 @@ services:
   api:
     image: flask-api
     container_name: flask-api
+    entrypoint: '/app/entrypoint.sh'
     command: 'python manage.py run -h 0.0.0.0 --debug'
     build: 'flask-api/'
     ports:
@@ -18,7 +19,7 @@ services:
       - db
   db:
     image: postgres:16
-    container_name: optimize-the-drive-db
+    container_name: otd-db
     ports:
       - '5432:5432'
     volumes:

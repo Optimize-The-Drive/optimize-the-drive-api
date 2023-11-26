@@ -4,7 +4,7 @@
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from app.routes import api_routes
-from app.models import *
+from app.models import User
 from config import get_environment
 from database import db
 

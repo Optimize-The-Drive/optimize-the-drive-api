@@ -10,6 +10,12 @@ def test_app():
     # create the app with common test config
     app = create_app()
     yield app
+    
+    
+@pytest.fixture
+def app_ctx(test_app):
+    with test_app.app_context():
+        yield
 
 @pytest.fixture
 def client(test_app):

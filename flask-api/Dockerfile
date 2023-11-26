@@ -10,5 +10,3 @@ RUN pip install -r requirements.txt
 
 # Bundle app source
 COPY . /app
-
-ENTRYPOINT [ "/app/entrypoint.sh" ]

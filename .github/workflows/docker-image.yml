@@ -16,11 +16,11 @@ jobs:
     - uses: actions/checkout@v3
     - name: Gather secrets
       run: |
-        cat flask-api/.env.example > flask-api/.test.env
+        cat flask-api/.env.example > flask-api/.env.test
         # Read secrets from Github. Unfortunately, each secret needs to be
         # set manually
-        sed -i 's/ENV_TYPE=.*/ENV_TYPE=${{ secrets.ENV_TYPE }}/' flask-api/.test.env
-        sed -i 's/SECRET_KEY=.*/SECRET_KEY=${{ secrets.SECRET_KEY }}/' flask-api/.test.env
+        sed -i 's/ENV_TYPE=.*/ENV_TYPE=${{ secrets.ENV_TYPE }}/' flask-api/.env.test
+        sed -i 's/SECRET_KEY=.*/SECRET_KEY=${{ secrets.SECRET_KEY }}/' flask-api/.env.test
     - name: Build the Docker image
       run: docker compose -f compose.ci.yaml up -d
     - name: Run Tests
