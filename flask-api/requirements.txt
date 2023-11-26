@@ -4,3 +4,6 @@ pylint
 pytest
 pytest-cov
 python-dotenv
+
+# Linting requirements
+pylint
