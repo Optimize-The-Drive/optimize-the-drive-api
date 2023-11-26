@@ -2,8 +2,8 @@
     Creates an instance of the flask application
 '''
 from flask import Flask, jsonify
-from app.routes import api_routes
 from config import get_environment
+from app.routes import api_routes
 
 def create_app(config=get_environment()):
     '''
