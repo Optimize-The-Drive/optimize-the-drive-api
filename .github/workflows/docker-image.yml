@@ -24,7 +24,7 @@ jobs:
     - name: Build the Docker image
       run: docker compose -f docker/compose.ci.yaml up -d
     - name: Pylint
-      run: docker exec flask-api-test /bin/sh -c "pylint flask-api --rcfie=.pylintrc"
+      run: docker exec flask-api-test /bin/sh -c "pylint --rcfie=.pylintrc $(git ls-files '*.py')"
     - name: Run Tests
       run: docker exec flask-api-test /bin/sh -c "pytest"
     
