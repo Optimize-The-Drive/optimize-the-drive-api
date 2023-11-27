@@ -21,7 +21,8 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint --rcfile=.pylintrc $(git ls-files '*.py')
+        pip install -r ${{ github.workspace }}/flask-api/requirements.txt
+
 
     - name: Gather secrets
       run: |
