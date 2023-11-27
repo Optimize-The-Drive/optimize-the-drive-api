@@ -3,9 +3,6 @@ FROM python:3-alpine
 # Create app directory
 WORKDIR /app
 
-# Copy pylint file into container
-COPY .pylintrc ./
-
 # Install app dependencies
 COPY requirements.txt ./
 
