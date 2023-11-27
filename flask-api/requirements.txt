@@ -4,4 +4,3 @@ pylint
 pytest
 pytest-cov
 python-dotenv
-django
