@@ -19,7 +19,7 @@ jobs:
         # TODO move lint inside docker container, so we don't install deps twice
         python -m pip install --upgrade pip
         pip install -r ${{ github.workspace }}/flask-api/requirements.txt
-        pylint --rcfile=.pylintrc $(git ls-files '*.py')
+        pylint --rcfile=.pylintrc flask-api/
     - name: Gather environment variables
       run: |
         cat flask-api/.env.example > flask-api/.env.test
