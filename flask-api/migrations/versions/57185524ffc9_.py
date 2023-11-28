@@ -1,11 +1,11 @@
-"""
+'''
 Initial migration
 
 Revision ID: 57185524ffc9
 Revises: 
 Create Date: 2023-11-25 05:02:32.296430
 
-"""
+'''
 from alembic import op
 import sqlalchemy as sa
 

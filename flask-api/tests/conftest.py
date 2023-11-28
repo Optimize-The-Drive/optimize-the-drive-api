@@ -10,10 +10,10 @@ def test_app():
     # create the app with common test config
     app = create_app()
     yield app
-    
-    
+
 @pytest.fixture
 def app_ctx(test_app):
+    """Creates an application context, useful for querying DB state."""
     with test_app.app_context():
         yield
 
@@ -24,5 +24,5 @@ def client(test_app):
 
 @pytest.fixture()
 def runner(app):
+    """Runner for testing"""
     return app.test_cli_runner()
-
