@@ -25,8 +25,9 @@ jobs:
         cat flask-api/.env.example > flask-api/.env.test
         # Read secrets from Github. Unfortunately, each secret needs to be
         # set manually
-        sed -i 's/ENV_TYPE=.*/ENV_TYPE=${{ secrets.ENV_TYPE }}/' flask-api/.env.test
+        sed -i 's/ENV_TYPE=.*/ENV_TYPE=${{ vars.ENV_TYPE }}/' flask-api/.env.test
         sed -i 's/SECRET_KEY=.*/SECRET_KEY=${{ secrets.SECRET_KEY }}/' flask-api/.env.test
+        sed -i 's/POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}/' flask-api/.env.test
     - name: Build and Run Tests
       run: docker compose -f compose.ci.yaml up --abort-on-container-exit
 
