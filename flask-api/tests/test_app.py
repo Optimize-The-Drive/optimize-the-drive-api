@@ -20,4 +20,4 @@ class Tests:
         '''
 
         user = db.session.query(User).where(User.username == 'testuser').one()
-        assert user is not None, 'the test user exists'
+        assert user is None, 'the test user exists'
