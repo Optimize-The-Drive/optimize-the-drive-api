@@ -9,7 +9,7 @@ basedir = os.path.abspath(os.path.dirname(__name__))
 dotenv_path = os.path.join(basedir, '.env')
 load_dotenv(dotenv_path)
 
-class Config(object):
+class Config():
     '''
         Shared config across all environments
     '''
@@ -34,13 +34,11 @@ def get_environment():
         Returns the appropriate environment configuration.
     '''
     env = os.getenv('ENV_TYPE')
-    
     test = os.getenv('SECRET_1')
     test1 = os.getenv('SECRET_CI_KEY')
     print(test, test1)
 
-    if env == 'dev':
-        return DevConfig
-    elif env == 'test':
-        return TestConfig 
-    
+    if env == 'test':
+        return TestConfig
+
+    return DevConfig

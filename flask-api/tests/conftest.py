@@ -18,5 +18,5 @@ def client(test_app):
 
 @pytest.fixture()
 def runner(app):
+    """Runner for testing"""
     return app.test_cli_runner()
-

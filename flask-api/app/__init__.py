@@ -2,8 +2,8 @@
     Creates an instance of the flask application
 '''
 from flask import Flask, jsonify
-from app.routes import api_routes
 from config import get_environment
+from app.routes import api_routes
 
 def create_app(config=get_environment()):
     '''
@@ -21,8 +21,9 @@ def register_error_routes(app):
         Assigns handlers for common API error codes.
     '''
     @app.errorhandler(404)
-    def not_found(e):
+    def not_found(_e):
         response_data = {
             'res': 'not found'
         }
         return jsonify(response_data), 404
+        
