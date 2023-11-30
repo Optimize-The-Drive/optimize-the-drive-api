@@ -29,3 +29,8 @@ Running the tests is very simple. A separate docker configuration is included fo
 ```
 docker compose -f compose.ci.yaml up --abort-on-container-exit
 ```
+
+### Creating and Running Migrations
+* To create a migration script with latest changes: `docker exec -it flask-api flask db migrate`
+* To upgrade to the next migration: `docker exec -it flask-api flask db upgrade`
+* To revert back to the previous migration: `docker exec -it flask-api flask db downgrade`
