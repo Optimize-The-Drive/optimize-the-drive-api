@@ -10,9 +10,9 @@ api_routes.register_blueprint(session_routes)
 
 @api_routes.get('/')
 def index():
-    """Root API ROUTE
+    '''Root API ROUTE
 
     Returns:
         String: Home endpoint
-    """
+    '''
     return jsonify({'res': 'Hellow from flawsk swerver'}), 200

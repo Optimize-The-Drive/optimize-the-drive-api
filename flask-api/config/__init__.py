@@ -1,6 +1,6 @@
 '''
     Reads environment variables and creates a configuration
-    object to be consumed by the flask application
+    object to be consumed by the flask application.
 '''
 import os
 from dotenv import load_dotenv
@@ -10,33 +10,32 @@ dotenv_path = os.path.join(basedir, '.env')
 load_dotenv(dotenv_path)
 
 class Config():
-    '''
-        Shared config across all environments
-    '''
-    DEBUG = False
+    ''' Shared config across all environments. '''
+
     SECRET_KEY = os.getenv('SECRET_KEY')
 
+    POSTGRES_USER = os.getenv('POSTGRES_USER', 'otd')
+    POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+    POSTGRES_PORT = os.getenv('POSTGRES_PORT', '5342')
+    POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'db')
+    POSTGRES_DB_NAME=os.getenv('POSTGRES_DB', 'otd-dev')
+
+    # pylint: disable-next=C0301
+    SQLALCHEMY_DATABASE_URI = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB_NAME}'
+
 class DevConfig(Config):
-    '''
-        Config for Dev Environment
-    '''
-    POSTGRES_URL = os.getenv('POSTGRES_URL')
+    ''' Config for Dev Environment. '''
+
+    DEBUG = True
 
 class TestConfig(Config):
-    '''
-        Config for Test Environment
-    '''
+    ''' Config for Test Environment. '''
     TESTING = True
-    POSTGRES_URL = os.getenv('POSTGRES_URL')
 
 def get_environment():
-    '''
-        Returns the appropriate environment configuration.
-    '''
+    ''' Returns the appropriate environment configuration. '''
+
     env = os.getenv('ENV_TYPE')
-    test = os.getenv('SECRET_1')
-    test1 = os.getenv('SECRET_CI_KEY')
-    print(test, test1)
 
     if env == 'test':
         return TestConfig

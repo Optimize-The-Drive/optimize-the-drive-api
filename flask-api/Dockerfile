@@ -4,12 +4,9 @@ FROM python:3-alpine
 WORKDIR /app
 
 # Install app dependencies
-COPY requirements.txt ./
+COPY requirements.txt /app
 
 RUN pip install -r requirements.txt
 
 # Bundle app source
-COPY . .
-
-EXPOSE 5000
-CMD [ "python", "run.py"]
+COPY . /app

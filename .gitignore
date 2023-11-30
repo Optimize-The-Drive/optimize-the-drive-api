@@ -1,6 +1,8 @@
 __pycache__/
+.pytest_cache
 *.py[cod]
 .env
-.test.env
+.env.test
 venv/
 .coverage
+pg_data

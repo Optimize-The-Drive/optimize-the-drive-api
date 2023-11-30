@@ -1,0 +1,27 @@
+# docker-compose.yaml
+version: '3'
+
+services:
+  api:
+    image: flask-api
+    container_name: flask-api
+    entrypoint: '/app/entrypoint.sh'
+    command: 'python manage.py run -h 0.0.0.0 --debug'
+    build: 'flask-api/'
+    ports:
+      - '5001:5000'
+    environment:
+      PYTHONPATH: /app
+    volumes:
+      - ./flask-api:/app
+    env_file: ./flask-api/.env 
+    depends_on:
+      - db
+  db:
+    image: postgres:16
+    container_name: otd-db
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    env_file: ./flask-api/.env  

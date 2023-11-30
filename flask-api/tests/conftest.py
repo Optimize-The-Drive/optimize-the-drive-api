@@ -12,6 +12,12 @@ def test_app():
     yield app
 
 @pytest.fixture
+def app_ctx(test_app):
+    """Creates an application context, useful for querying DB state."""
+    with test_app.app_context():
+        yield
+
+@pytest.fixture
 def client(test_app):
     """A test client for the app."""
     return test_app.test_client()
