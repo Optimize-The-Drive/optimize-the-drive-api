@@ -1,6 +1,6 @@
 ''' Defines the base model class. '''
 from database import db
-
+from sqlalchemy.orm import Mapped, mapped_column
 
 class BaseModel():
     '''
@@ -12,9 +12,9 @@ class BaseModel():
             abstract to_json
             abstract create
     '''
-    id = db.Column(db.Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
 
-    def to_json(self):
+    def to_obj(self) -> dict:
         '''
             Abstract to_json method for a model.
             

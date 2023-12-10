@@ -17,6 +17,7 @@ services:
     env_file: ./flask-api/.env 
     depends_on:
       - db
+    restart: always
   db:
     image: postgres:16
     container_name: otd-db

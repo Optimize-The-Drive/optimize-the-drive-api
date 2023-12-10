@@ -3,16 +3,18 @@
     this file.
 '''
 from flask import Blueprint, jsonify
-from app.routes.session import session_routes
+from app.common.utility import create_server_res
+from app.routes.auth import auth_routes
 
 api_routes = Blueprint("api", __name__, url_prefix="/api")
-api_routes.register_blueprint(session_routes)
+api_routes.register_blueprint(auth_routes)
 
 @api_routes.get('/')
 def index():
-    '''Root API ROUTE
-
-    Returns:
-        String: Home endpoint
     '''
-    return jsonify({'res': 'Hellow from flawsk swerver'}), 200
+        Root API ROUTE
+
+        Returns:
+            String: Home endpoint
+    '''
+    return jsonify(create_server_res('Optimize the drive API')), 200
