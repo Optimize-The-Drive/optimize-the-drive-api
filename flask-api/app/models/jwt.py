@@ -1,6 +1,7 @@
 '''  Defines the JWT model class. '''
 
 from enum import Enum
+from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.common.errors import ModelException
@@ -30,9 +31,9 @@ class JWT(db.Model, BaseModel):
     __tablename__ = 'jwt'
 
     jti: Mapped[str] = mapped_column(db.String(36), unique=True, nullable=False)
-    type: JWTType = mapped_column(db.Enum(JWTType))
-    user_id = mapped_column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
-    revoked_at = mapped_column(db.DateTime)
+    type: Mapped[JWTType] = mapped_column(db.Enum(JWTType), nullable=False)
+    user_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    revoked_at:  Mapped[datetime] = mapped_column(db.DateTime, nullable=True)
     expires = mapped_column(db.DateTime, nullable=False)
 
     user = db.relationship("User")

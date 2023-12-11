@@ -1,6 +1,6 @@
 ''' Defines the base model class. '''
-from database import db
 from sqlalchemy.orm import Mapped, mapped_column
+from database import db
 
 class BaseModel():
     '''

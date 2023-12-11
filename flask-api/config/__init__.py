@@ -18,14 +18,25 @@ class Config():
     POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
     POSTGRES_PORT = os.getenv('POSTGRES_PORT', '5342')
     POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'db')
-    POSTGRES_DB_NAME=os.getenv('POSTGRES_DB', 'otd-dev')
+    POSTGRES_DB_NAME = os.getenv('POSTGRES_DB', 'otd-dev')
 
     # pylint: disable-next=C0301
     SQLALCHEMY_DATABASE_URI = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB_NAME}'
 
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+    JWT_TOKEN_LOCATION = ['headers', 'cookies']
+    JWT_IDENTITY_CLAIM = 'sub'
+    JWT_ACCESS_TOKEN_EXPIRES = int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES', '900'))
+    JWT_REFRESH_TOKEN_EXPIRES = int(os.getenv('JWT_REFRESH_TOKEN_EXPIRES', '2592000'))
+
+    JWT_ACCESS_COOKIE_PATH = '/api/'
+    JWT_REFRESH_COOKIE_PATH = '/api/auth/refresh'
+    JWT_SESSION_COOKIE = True
+    JWT_COOKIE_SECURE = os.getenv('JWT_COOKIE_SECURE')
+
 class DevConfig(Config):
     ''' Config for Dev Environment. '''
-
+    
     DEBUG = True
 
 class TestConfig(Config):

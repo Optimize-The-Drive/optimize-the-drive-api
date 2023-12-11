@@ -16,10 +16,13 @@ def init_db():
     # db.drop_all()
     # db.create_all()
 
-    user = User.create(username='testuser', email='test@email.com')
-    user.set_password('test_password')
-    db.session.add(user)
-    db.session.commit()
+    try:
+        user = User.create(username='testuser', email='test@email.com')
+        user.set_password('test_password')
+        db.session.add(user)
+        db.session.commit()
+    except Exception as e:
+        print('Skipping data initialization due to: ', e)
 
 if __name__ == '__main__':
     cli()
