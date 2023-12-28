@@ -22,7 +22,6 @@ def upgrade():
     sa.Column('jti', sa.String(length=36), nullable=False),
     sa.Column('type', sa.Enum('REFRESH', 'ACCESS', name='jwttype'), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('revoked_at', sa.DateTime(), nullable=True),
     sa.Column('expires', sa.DateTime(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),

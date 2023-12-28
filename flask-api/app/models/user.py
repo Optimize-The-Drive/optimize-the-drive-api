@@ -1,10 +1,11 @@
 '''  Defines the User model class. '''
 from datetime import datetime
 
-from app.common.errors import ModelException
-from database import db
 from passlib.hash import bcrypt_sha256
 from sqlalchemy.orm import Mapped, mapped_column
+
+from app.common.errors import ModelException
+from app.extensions import db
 from .base import BaseModel
 
 class User(db.Model, BaseModel):
@@ -61,10 +62,10 @@ class User(db.Model, BaseModel):
             user.username = kwargs['username']
             user.email = kwargs['email']
         else:
-            raise ModelException('missing username or email parameters.')
+            raise ModelException('Missing username or email parameters.')
         return user
 
-    def set_password(self, plaintext: str) -> None:
+    def set_password(self, plaintext: str = '') -> None:
         '''
             Sets the password of the user, encrypting it.
             
@@ -74,7 +75,7 @@ class User(db.Model, BaseModel):
         '''
         self.password_hash = bcrypt_sha256.hash(plaintext)
 
-    def verify_password(self, plaintext: str) -> bool:
+    def verify_password(self, plaintext: str = '') -> bool:
         '''
             Verifies the password of the user.
             

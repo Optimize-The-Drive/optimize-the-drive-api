@@ -17,4 +17,4 @@ def index():
         Returns:
             String: Home endpoint
     '''
-    return jsonify(create_server_res('Optimize the drive API')), 200
+    return create_server_res('Optimize The Drive API'), 200

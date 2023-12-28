@@ -32,16 +32,18 @@ class Config():
     JWT_ACCESS_COOKIE_PATH = '/api/'
     JWT_REFRESH_COOKIE_PATH = '/api/auth/refresh'
     JWT_SESSION_COOKIE = True
-    JWT_COOKIE_SECURE = os.getenv('JWT_COOKIE_SECURE')
+    # CSRF_PROTECT and SECURE should True in PROD, NO EXCEPTIONS!
+    JWT_COOKIE_SECURE = False
+    JWT_COOKIE_CSRF_PROTECT = False
 
 class DevConfig(Config):
     ''' Config for Dev Environment. '''
-    
     DEBUG = True
 
 class TestConfig(Config):
     ''' Config for Test Environment. '''
     TESTING = True
+    JWT_COOKIE_CSRF_PROTECT = True
 
 def get_environment():
     ''' Returns the appropriate environment configuration. '''

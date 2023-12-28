@@ -5,16 +5,12 @@ import traceback
 
 from flask import Flask, jsonify
 from flask_migrate import Migrate
-from flask_jwt_extended import JWTManager
 
 from app.routes import api_routes
 from app.models import User
 from app.common.utility import create_server_res
+from app.extensions import db, jwt, migrate
 from config import get_environment
-from database import db
-
-migrate = Migrate()
-jwt = JWTManager()
 
 def create_app(config=get_environment()):
     '''
@@ -29,7 +25,7 @@ def create_app(config=get_environment()):
     db.init_app(app)
     db.app = app
     migrate.init_app(app, db, compare_type=True)
-    
+
     # Initialize JWT
     jwt.init_app(app)
 
@@ -39,17 +35,26 @@ def register_error_routes(app):
     '''
         Assigns handlers for common API error codes.
     '''
+
+    @app.errorhandler(400)
+    def bad_request(error):
+        return create_server_res(error.description), 400
+
+    @app.errorhandler(401)
+    def unauthorized(error):
+        return create_server_res(error.description), 401
+
     @app.errorhandler(404)
-    def not_found(_error):
-        return create_server_res('Not found.'), 404
+    def not_found(error):
+        return create_server_res(error.description), 404
 
     @app.errorhandler(405)
-    def bad_request(_error):
-        return create_server_res('Method not Allowed.'), 405
+    def method_not_allowed(error):
+        return create_server_res(error.description), 405
 
     @app.errorhandler(422)
-    def unprocessable_entity(_error):
-        return create_server_res('Unprocessable entity.'), 422
+    def unprocessable_entity(error):
+        return create_server_res(error.description), 422
 
     @app.errorhandler(Exception)
     def server_error(error):
@@ -57,4 +62,4 @@ def register_error_routes(app):
         # TODO Replace with logger
         print(''.join(traceback.format_exception(None, error, error.__traceback__)), flush=True)
 
-        return create_server_res('Internal Server Error'), 500
+        return create_server_res('Internal server error.'), 500

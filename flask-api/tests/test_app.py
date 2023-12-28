@@ -2,7 +2,8 @@
     Holds temporary tests for the api.
 '''
 import pytest
-from database import db
+
+from app.extensions import db
 from app.models import User
 class Tests:
     '''

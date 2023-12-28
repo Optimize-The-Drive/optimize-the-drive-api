@@ -10,8 +10,8 @@ def create_server_res(message: str) -> dict:
         
         arguments:
             message: Str
-        returns: Dict in format { res: <message> }
+        returns: Dict in format { msg: <message> }
     '''
     return jsonify({
-        'res': message
+        'msg': message
     })
