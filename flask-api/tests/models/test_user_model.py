@@ -5,15 +5,16 @@ import pytest
 
 from app.common.errors import ModelException
 from app.models import User
-
+from tests.helpers import add_user_to_db, remove_user_from_db
 
 class TestUserModel:
     '''
         Tests for the user model.
     '''
 
-    _test_username = "testuser"
-    _test_email = "testemail@email.com"
+    _test_username = "userone"
+    _test_email = "1@email.com"
+    _test_password = "thisisapassword"
 
     def test_create(self):
         '''
@@ -24,6 +25,17 @@ class TestUserModel:
 
         assert user_obj['username'] == self._test_username
         assert user_obj['email'] == self._test_email
+
+    @pytest.mark.usefixtures("app_ctx")
+    def test_password_check(self):
+        '''
+            Tests that user password verification works.
+        '''
+        user = add_user_to_db(self._test_username, self._test_email, self._test_password)
+        assert user.verify_password(self._test_password)
+        assert not user.verify_password('notcorrect')
+
+        remove_user_from_db(user)
 
         # Can't test other attributes of the user until they are saved into the db.
 
