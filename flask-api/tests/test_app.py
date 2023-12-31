@@ -5,6 +5,7 @@ import pytest
 
 from app.extensions import db
 from app.models import User
+
 class Tests:
     '''
         TODO remove temporary tests

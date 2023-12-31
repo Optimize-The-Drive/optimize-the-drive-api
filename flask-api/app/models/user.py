@@ -44,7 +44,7 @@ class User(db.Model, BaseModel):
         return {
             'id': self.id,
             'username': self.username,
-            'email': self.username,
+            'email': self.email,
             'created_at': self.created_at,
             'verified': self.verified
         }
@@ -65,6 +65,7 @@ class User(db.Model, BaseModel):
         if 'username' in kwargs and 'email' in kwargs:
             user.username = kwargs['username']
             user.email = kwargs['email']
+            user.verified = False
         else:
             raise ModelException('Missing username or email parameters.')
         return user
