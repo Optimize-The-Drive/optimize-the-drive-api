@@ -3,14 +3,14 @@
 '''
 import traceback
 
-from flask import Flask, jsonify
-from flask_migrate import Migrate
+from flask import Flask
 
 from app.routes import api_routes
-from app.models import User
+from app.models import User, JWT
 from app.common.utility import create_server_res
 from app.extensions import db, jwt, migrate
 from config import get_environment
+
 
 def create_app(config=get_environment()):
     '''
@@ -59,7 +59,7 @@ def register_error_routes(app):
     @app.errorhandler(Exception)
     def server_error(error):
         '''Catch-all error handler.'''
-        # TODO Replace with logger
+        # Replace with logger
         print(''.join(traceback.format_exception(None, error, error.__traceback__)), flush=True)
 
         return create_server_res('Internal server error.'), 500

@@ -21,6 +21,7 @@ def init_db():
         user.set_password('test_password')
         db.session.add(user)
         db.session.commit()
+    # pylint: disable-next=W0718
     except Exception as e:
         print('Skipping data initialization due to: ', e)
 

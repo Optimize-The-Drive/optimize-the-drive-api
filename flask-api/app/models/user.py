@@ -8,6 +8,7 @@ from app.common.errors import ModelException
 from app.extensions import db
 from .base import BaseModel
 
+
 class User(db.Model, BaseModel):
     '''
         User model class definition. Inherits BaseModel class.
@@ -36,7 +37,9 @@ class User(db.Model, BaseModel):
     def to_obj(self) -> dict:
         '''
             Returns the JSON representation of a User model.
-            Returns: JSON
+
+            RETURNS:
+                dict { id, username, email, created_at, verified }
         '''
         return {
             'id': self.id,
@@ -51,14 +54,15 @@ class User(db.Model, BaseModel):
         '''
             Creates an instance of the User model.
             
-            arguments:
-                username: String
-                email: String
-            returns: User
+            ARGS:
+                username (str): The user's username
+                email (str): The user's email.
+            returns:
+                User - the created user.
         '''
         user = User()
 
-        if 'username' and 'email' in kwargs:
+        if 'username' in kwargs and 'email' in kwargs:
             user.username = kwargs['username']
             user.email = kwargs['email']
         else:
@@ -69,9 +73,8 @@ class User(db.Model, BaseModel):
         '''
             Sets the password of the user, encrypting it.
             
-            arguments:
-                plaintext: String
-            returns: None
+            ARGS:
+                plaintext (str): unencrypted password
         '''
         self.password_hash = bcrypt_sha256.hash(plaintext)
 
@@ -79,8 +82,9 @@ class User(db.Model, BaseModel):
         '''
             Verifies the password of the user.
             
-            arguments:
-                plaintext: String
-            returns: Boolean
+            ARGS:
+                plaintext (str): unencrypted password
+            RETURNS:
+                Boolean - whether the password is correct or not.
         '''
         return bcrypt_sha256.verify(plaintext, self.password_hash)

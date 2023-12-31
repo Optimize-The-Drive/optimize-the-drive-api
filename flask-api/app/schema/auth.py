@@ -2,6 +2,7 @@
 
 from marshmallow import Schema, fields
 
+
 class LoginSchema(Schema):
     '''The User Schema.'''
     username: str = fields.Str(required=True, load_only=True)

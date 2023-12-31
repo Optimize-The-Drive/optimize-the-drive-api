@@ -8,8 +8,12 @@ from flask_migrate import Migrate
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import MetaData
 
+
 # Database
 class BaseDeclarativeModel(DeclarativeBase):
+    '''
+        Defines metadata for our postgres database creation.
+    '''
     metadata = MetaData(naming_convention={
         "ix": 'ix_%(column_0_label)s',
         "uq": "uq_%(table_name)s_%(column_0_name)s",

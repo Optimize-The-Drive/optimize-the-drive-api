@@ -1,22 +1,26 @@
-
-from app.models.jwt import JWT
+'''
+	Defines the JWT repository.
+'''
+from app.models import JWT
 from .base import BaseRepo
 
+
 class JWTRepo(BaseRepo):
-	'''
-		JWTRepo defintion. Extends the BaseRepository.
+    '''
+        JWT Repo definition. Extends the Base Repository.
 
-		methods:
-			by_jti
-	'''
-	def by_jti(self, jti: str) -> JWT:
-		'''
-			Queries a JWT token by it's JTI.
+        methods:
+            by_jti
+    '''
+    def by_jti(self, jti: str) -> JWT:
+        '''
+            Queries a JWT token by it's JTI.
 
-			arguments:
-				jti: str
-			returns: JWT
-		'''
-		return self._db.session.execute(
-			self._db.select(JWT).filter_by(jti=jti)
-		).scalar()
+            ARGS:
+                jti (str): The JTI of the JWT.
+            returns:
+                JWT - The queried JWT.
+        '''
+        return self._db.session.execute(
+            self._db.select(JWT).filter_by(jti=jti)
+        ).scalar()

@@ -4,6 +4,7 @@ from datetime import datetime
 
 from marshmallow import Schema, fields
 
+
 class UserSchema(Schema):
     '''The User Schema.'''
     id: int = fields.Int(dump_only=True)

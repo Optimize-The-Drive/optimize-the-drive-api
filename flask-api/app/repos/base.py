@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from app.extensions import db
 
+
 class BaseRepo:
     '''
         BaseRepo class definition.
@@ -23,10 +24,13 @@ class BaseRepo:
         ''' 
             Adds single / multiple assets to the database.
             
-            arguments:
-                asset: object or list(object)
+            ARGS:
+                asset (object or list (object)): Asset(s) to save to the db.
         '''
-        self._db.session.add(asset)
+        if isinstance(asset, list):
+            self._db.session.add_all(asset)
+        else:
+            self._db.session.add(asset)
 
     def commit(self):
         ''' Commits the assets to the database. '''

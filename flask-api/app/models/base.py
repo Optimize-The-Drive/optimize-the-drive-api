@@ -2,12 +2,13 @@
 from sqlalchemy.orm import Mapped, mapped_column
 from app.extensions import db
 
+
 class BaseModel():
     '''
         Base model class definition.
         
         attributes:
-            ID: Number
+            id (int): database row ID of the model.
         methods:
             abstract to_json
             abstract create
@@ -18,7 +19,7 @@ class BaseModel():
         '''
             Abstract to_json method for a model.
             
-            Returns NotImplementedError.
+            RETURNS NotImplementedError.
         '''
         raise NotImplementedError("Please implement this method")
 
@@ -27,6 +28,6 @@ class BaseModel():
         '''
             Abstract create method for a model.
             
-            Returns NotImplementedError.
+            RETURNS NotImplementedError.
         '''
         raise NotImplementedError("Please implement this method")

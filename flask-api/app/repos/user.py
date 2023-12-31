@@ -1,7 +1,7 @@
 '''
     Defines the user repository.
 '''
-from app.models.user import User
+from app.models import User
 from .base import BaseRepo
 
 
@@ -16,10 +16,11 @@ class UserRepo(BaseRepo):
         '''
             Returns the user by it's ID.
 
-            arguments:
-                user_id: int
+            ARGS:
+                user_id (int): The user's ID
 
-            returns: User
+            RETURNS:
+                User - The queried User.
         '''
         return self._db.session.execute(
             self._db.select(User).filter_by(id=user_id)
@@ -29,10 +30,11 @@ class UserRepo(BaseRepo):
         '''
             Returns the user by it's username.
 
-            arguments:
-                username: str
+            ARGS:
+                username (str): The user's username
 
-            returns: User
+            RETURNS:
+                User - The queried User.
         '''
         return self._db.session.execute(
             self._db.select(User).filter_by(username=username)

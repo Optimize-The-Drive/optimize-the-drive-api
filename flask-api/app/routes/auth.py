@@ -78,7 +78,7 @@ def logout():
         Handles user logout. Revokes both access and refresh tokens.
 
         HEADER:
-            BEARER Auth
+            BEARER token
 
         RESPONSE:
             msg, 200
@@ -113,4 +113,6 @@ def check_if_token_revoked(_jwt_headers, jwt_payload):
         Checks to see if the token passed in the request has been
         blacklisted. Used in validating guarded routes.
     '''
-    return jwt_service.is_token_revoked(jwt_payload)
+    jti = jwt_payload['jti']
+
+    return jti and jwt_service.is_token_revoked(jti)
