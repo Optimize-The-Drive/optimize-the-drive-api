@@ -47,10 +47,9 @@ def test_refresh(auth_client):
     '''
         Tests that the refresh endpoint returns an access_token.
     '''
-    client, _access_token = auth_client
+    client, headers = auth_client
 
-    res = client.post('/api/auth/refresh')
-    print(res.json, res.status_code)
+    res = client.post('/api/auth/refresh', headers={'X-CSRF-TOKEN': headers['X-CSRF-TOKEN']})
     access = res.json['access_token']
 
     assert res.status_code == 200 and access
@@ -70,12 +69,12 @@ def test_logout(auth_client):
     '''
         Tests that the logout endpoint works.
     '''
-    client, access_token = auth_client
+    client, headers = auth_client
 
-    res = client.post('/api/auth/logout', headers={'Authorization': access_token})
+    res = client.post('/api/auth/logout', headers={'Authorization': headers['Authorization']})
 
     # test that a guarded route no longer works with either the access or refresh token
-    res1 = client.post('/api/auth/logout', headers={'Authorization': access_token})
+    res1 = client.post('/api/auth/logout', headers={'Authorization': headers['Authorization']})
     res2 = client.post('/api/auth/refresh')
 
     assert res.status_code == 200 and res1.status_code == 401 and res2.status_code == 401

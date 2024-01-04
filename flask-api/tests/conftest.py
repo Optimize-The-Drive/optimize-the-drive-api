@@ -48,7 +48,7 @@ def auth_client(client):
     '''
         Logs in an authenticated user to use in other tests.
 
-        Returns [client, access_token]
+        Returns [client, headers(csrf_token, authorization)]
     '''
 
     login_data = {
@@ -58,5 +58,6 @@ def auth_client(client):
 
     response = client.post('/api/auth/login', json=login_data)
     access_token = response.json['access_token']
+    csrf_token = client.get_cookie('csrf_refresh_token').value
 
-    return [client, f'Bearer {access_token}']
+    return [client, {'Authorization': f'Bearer {access_token}', 'X-CSRF-TOKEN': csrf_token }]

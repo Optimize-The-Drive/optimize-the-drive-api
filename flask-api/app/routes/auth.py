@@ -72,7 +72,7 @@ def refresh():
 
 
 @auth_routes.post('/logout')
-@jwt_required(verify_type=False)
+@jwt_required()
 def logout():
     '''
         Handles user logout. Revokes both access and refresh tokens.

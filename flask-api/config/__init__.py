@@ -34,7 +34,7 @@ class Config():
     JWT_SESSION_COOKIE = True
     # CSRF_PROTECT and SECURE should True in PROD, NO EXCEPTIONS!
     JWT_COOKIE_SECURE = False
-    JWT_COOKIE_CSRF_PROTECT = False
+    JWT_COOKIE_CSRF_PROTECT = True
     JWT_COOKIE_SAMESITE = 'Strict'
 
 class DevConfig(Config):
@@ -44,7 +44,6 @@ class DevConfig(Config):
 class TestConfig(Config):
     ''' Config for Test Environment. '''
     TESTING = True
-    JWT_COOKIE_CSRF_PROTECT = True
 
 def get_environment():
     ''' Returns the appropriate environment configuration. '''
