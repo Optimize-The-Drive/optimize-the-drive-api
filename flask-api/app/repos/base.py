@@ -18,7 +18,7 @@ class BaseRepo:
             add_many
             commit
     '''
-    _db: SQLAlchemy= db
+    _db: SQLAlchemy = db
 
     def add(self, asset: object or list):
         ''' 
@@ -31,6 +31,15 @@ class BaseRepo:
             self._db.session.add_all(asset)
         else:
             self._db.session.add(asset)
+
+    def delete(self, asset: object):
+        '''
+            Removes an asset from the database.
+
+            ARGS:
+                asset (object): Asset to remove from the db.
+        '''
+        self._db.session.delete(asset)
 
     def commit(self):
         ''' Commits the assets to the database. '''

@@ -6,7 +6,8 @@ import traceback
 from flask import Flask
 
 from app.routes import api_routes
-from app.models import User, JWT
+from app.models.user import User
+from app.models.jwt import JWT
 from app.common.utility import create_server_res
 from app.extensions import db, jwt, migrate
 from config import get_environment

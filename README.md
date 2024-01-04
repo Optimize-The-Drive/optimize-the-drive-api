@@ -27,7 +27,7 @@ To run the lint, ensure you have installed the virtual environment setup.
 ### Running Tests
 Running the tests is very simple. A separate docker configuration is included for running them:
 ```
-docker compose -f compose.ci.yaml up --abort-on-container-exit
+./run_tests.sh
 ```
 
 ### Creating and Running Migrations

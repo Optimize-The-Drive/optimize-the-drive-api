@@ -49,7 +49,7 @@ class JWT(db.Model, BaseModel):
     # pylint: disable-next=E1136
     expires: Mapped[datetime] = mapped_column(db.DateTime, nullable=False)
 
-    user = db.relationship("User")
+    user = db.relationship("User", back_populates="jwts")
 
     @staticmethod
     def create(**kwargs):

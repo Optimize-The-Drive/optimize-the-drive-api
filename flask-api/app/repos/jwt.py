@@ -1,7 +1,7 @@
 '''
 	Defines the JWT repository.
 '''
-from app.models import JWT
+from app.models.jwt import JWT
 from .base import BaseRepo
 
 

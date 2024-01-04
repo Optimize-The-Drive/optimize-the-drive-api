@@ -2,8 +2,10 @@
     Helper functions for tests.
 '''
 
-from app.extensions import db
 from app.models.user import User
+from app.repos.user import UserRepo
+
+repo = UserRepo()
 
 def add_user_to_db(username: str, email: str, password: str):
     '''
@@ -18,8 +20,8 @@ def add_user_to_db(username: str, email: str, password: str):
     '''
     user = User.create(username=username, email=email)
     user.set_password(password)
-    db.session.add(user)
-    db.session.commit()
+    repo.add(user)
+    repo.commit()
 
     return user
 
@@ -30,5 +32,5 @@ def remove_user_from_db(user: User):
         ARGS:
             User (user): The user to remove
     '''
-    db.session.delete(user)
-    db.session.commit()
+    repo.delete(user)
+    repo.commit()

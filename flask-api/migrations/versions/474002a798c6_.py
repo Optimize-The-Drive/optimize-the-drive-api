@@ -24,7 +24,7 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('expires', sa.DateTime(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE', onupdate='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('jti', name=op.f('uq_jwt_jti'))
     )

@@ -33,6 +33,7 @@ class User(db.Model, BaseModel):
     password_hash: Mapped[str] = mapped_column(db.String(128), unique=False, nullable=False)
     created_at: Mapped[datetime] = mapped_column(db.DateTime, unique=False, default=datetime.now)
     verified: Mapped[bool] = mapped_column(db.Boolean, unique=False, nullable=False, default=False)
+    jwts = db.relationship("JWT", cascade="all,delete", back_populates="user")
 
     def to_obj(self) -> dict:
         '''

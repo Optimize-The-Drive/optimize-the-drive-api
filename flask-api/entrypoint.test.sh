@@ -17,6 +17,6 @@ echo "postgres has started started"
 python manage.py db upgrade
 
 # create test data
-python manage.py init_db
+python manage.py init_test_db
 
 exec "$@"

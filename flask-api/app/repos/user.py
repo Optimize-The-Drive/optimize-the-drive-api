@@ -1,7 +1,7 @@
 '''
     Defines the user repository.
 '''
-from app.models import User
+from app.models.user import User
 from .base import BaseRepo
 
 

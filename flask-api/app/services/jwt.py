@@ -9,8 +9,7 @@ from flask_jwt_extended import (
 )
 
 from app.repos.jwt import JWTRepo
-from app.models import JWT
-from app.models.jwt import JWTType
+from app.models.jwt import JWTType, JWT
 from app.common.errors import ServiceException
 
 

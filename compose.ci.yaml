@@ -6,7 +6,7 @@ services:
     image: flask-api-test
     container_name: flask-api-test
     entrypoint: '/app/entrypoint.test.sh'
-    command: pytest /app/tests/
+    command: pytest /app/tests/ -s -v
     build: 'flask-api/'
     ports:
       - '5002:5000'
