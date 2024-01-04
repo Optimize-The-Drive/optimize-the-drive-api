@@ -9,7 +9,6 @@ from app.common.errors import ModelException
 from app.models.jwt import JWTType, JWT
 
 
-
 TEST_JTI = "thisisalongjti"
 TEST_USER_ID = 11
 TEST_JWT_TYPE = JWTType.ACCESS

@@ -17,7 +17,6 @@ def test_correct_login(client):
     assert response.status_code == 200
     assert access and refresh
 
-
 def test_wrong_login(client):
     '''
         Tests that passing in a wrong username/password prevents a user from logging in.

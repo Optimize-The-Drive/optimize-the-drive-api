@@ -35,6 +35,7 @@ class Config():
     # CSRF_PROTECT and SECURE should True in PROD, NO EXCEPTIONS!
     JWT_COOKIE_SECURE = False
     JWT_COOKIE_CSRF_PROTECT = False
+    JWT_COOKIE_SAMESITE = 'Strict'
 
 class DevConfig(Config):
     ''' Config for Dev Environment. '''
