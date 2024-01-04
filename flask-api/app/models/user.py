@@ -28,11 +28,17 @@ class User(db.Model, BaseModel):
     '''
     __tablename__ = 'users'
 
+    # pylint: disable-next=E1136
     username: Mapped[str] = mapped_column(db.String(32), unique=True, nullable=False)
+    # pylint: disable-next=E1136
     email: Mapped[str] = mapped_column(db.String(128), unique=True, nullable=False)
+    # pylint: disable-next=E1136
     password_hash: Mapped[str] = mapped_column(db.String(128), unique=False, nullable=False)
+    # pylint: disable-next=E1136
     created_at: Mapped[datetime] = mapped_column(db.DateTime, unique=False, default=datetime.now)
+    # pylint: disable-next=E1136
     verified: Mapped[bool] = mapped_column(db.Boolean, unique=False, nullable=False, default=False)
+    # pylint: disable-next=E1136
     jwts = db.relationship("JWT", cascade="all,delete", back_populates="user")
 
     def to_obj(self) -> dict:
