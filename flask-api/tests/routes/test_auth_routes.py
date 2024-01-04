@@ -50,6 +50,7 @@ def test_refresh(auth_client):
     client, _access_token = auth_client
 
     res = client.post('/api/auth/refresh')
+    print(res.json, res.status_code)
     access = res.json['access_token']
 
     assert res.status_code == 200 and access
