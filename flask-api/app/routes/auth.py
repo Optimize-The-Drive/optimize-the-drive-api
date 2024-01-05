@@ -91,8 +91,7 @@ def logout():
 
     refresh_token_decoded = decode_token(refresh_token)
 
-    jwt_service.blacklist_token(access_token_decoded)
-    jwt_service.blacklist_token(refresh_token_decoded)
+    jwt_service.blacklist_tokens([access_token_decoded, refresh_token_decoded])
 
     return create_server_res('Sucessfully logged out.'), 200
 

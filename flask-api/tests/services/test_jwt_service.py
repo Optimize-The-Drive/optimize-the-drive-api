@@ -51,7 +51,10 @@ def test_token_blacklist():
     decoded_access = decode_token(tokens['access'])
     decoded_refresh = decode_token(tokens['refresh'])
 
-    service.blacklist_token(decoded_access)
+    assert not service.is_token_revoked(decoded_refresh['jti'])
+    assert not service.is_token_revoked(decoded_access['jti'])
+
+    service.blacklist_tokens([decoded_access, decoded_refresh])
 
     assert service.is_token_revoked(decoded_access['jti'])
-    assert not service.is_token_revoked(decoded_refresh['jti'])
+    assert service.is_token_revoked(decoded_refresh['jti'])

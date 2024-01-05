@@ -23,7 +23,7 @@ class JWTService:
         methods:
             generate_access_refresh
             generate_access
-            blacklist_token
+            blacklist_tokens
             is_token_revoked
     '''
     _jwt_repo = JWTRepo()
@@ -59,24 +59,31 @@ class JWTService:
 
         return access_token
 
-    def blacklist_token(self, token: dict) -> None:
+    def blacklist_tokens(self, tokens: list) -> None:
         '''
-            Adds a token to the blacklist jwt database table.
+            Adds tokens to the blacklist jwt database table.
 
             ARGS:
                 token (str): Token to blacklist.
         '''
-        try:
-            jti = token["jti"]
-            jwt_type = JWTType.ACCESS if token["type"] == 'access' else JWTType.REFRESH
-            user_id = token[current_app.config["JWT_IDENTITY_CLAIM"]]
-            expires = datetime.fromtimestamp(token["exp"])
-        except KeyError as _error:
-            raise ServiceException('Malformed token passed') from _error
 
-        jwt = JWT.create(jti=jti, type=jwt_type, user_id=user_id, expires=expires)
-        self._jwt_repo.add([jwt])
-        self._jwt_repo.commit()
+        jwts = []
+
+        for token in tokens:
+            try:
+                jti = token["jti"]
+                jwt_type = JWTType.ACCESS if token["type"] == 'access' else JWTType.REFRESH
+                user_id = token[current_app.config["JWT_IDENTITY_CLAIM"]]
+                expires = datetime.fromtimestamp(token["exp"])
+            except KeyError as _error:
+                raise ServiceException('Malformed token passed') from _error
+
+            jwt = JWT.create(jti=jti, type=jwt_type, user_id=user_id, expires=expires)
+            jwts.append(jwt)
+
+        if len(jwts) > 0:
+            self._jwt_repo.add(jwts)
+            self._jwt_repo.commit()
 
     def is_token_revoked(self, jti: str) -> bool:
         '''
