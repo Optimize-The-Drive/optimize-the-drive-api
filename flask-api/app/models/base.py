@@ -1,5 +1,6 @@
 ''' Defines the base model class. '''
-from database import db
+from sqlalchemy.orm import Mapped, mapped_column
+from app.extensions import db
 
 
 class BaseModel():
@@ -7,18 +8,18 @@ class BaseModel():
         Base model class definition.
         
         attributes:
-            ID: Number
+            id (int): database row ID of the model.
         methods:
             abstract to_json
             abstract create
     '''
-    id = db.Column(db.Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
 
-    def to_json(self):
+    def to_obj(self) -> dict:
         '''
             Abstract to_json method for a model.
             
-            Returns NotImplementedError.
+            RETURNS NotImplementedError.
         '''
         raise NotImplementedError("Please implement this method")
 
@@ -27,6 +28,6 @@ class BaseModel():
         '''
             Abstract create method for a model.
             
-            Returns NotImplementedError.
+            RETURNS NotImplementedError.
         '''
         raise NotImplementedError("Please implement this method")
