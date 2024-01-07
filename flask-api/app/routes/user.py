@@ -2,8 +2,8 @@
 
 from flask_smorest import Blueprint
 from flask_jwt_extended import (
-    get_jwt_identity,
-    jwt_required
+    jwt_required,
+    get_current_user
 )
 
 from app.common.utility import create_server_res
@@ -21,8 +21,7 @@ def delete_me():
         
         RETURNS 200, msg
     '''
-    user_id = get_jwt_identity()
-    user = user_repo.by_id(user_id)
+    user = get_current_user()
 
     if user:
         user_repo.delete(user)
