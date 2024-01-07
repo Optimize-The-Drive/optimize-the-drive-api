@@ -11,15 +11,14 @@ from flask_jwt_extended import (
 )
 
 from app.common.utility import create_server_res
-from app.repos.user import UserRepo
+from app.repos import user_repo
 from app.schema.auth import LoginSchema
 from app.extensions import jwt
-from app.services.jwt import JWTService
+from app.services import jwt_service
+from app.services.jwt import JWT_REFRESH_CLAIMS
 
 
 auth_routes = Blueprint("auth", __name__, url_prefix="/auth")
-user_repo = UserRepo()
-jwt_service = JWTService()
 
 @auth_routes.post('/login')
 @auth_routes.arguments(LoginSchema)
@@ -84,7 +83,7 @@ def logout():
             msg, 200
     '''
     access_token_decoded = get_jwt()
-    refresh_token = access_token_decoded['refresh_token']
+    refresh_token = access_token_decoded[JWT_REFRESH_CLAIMS]
 
     if not refresh_token:
         return create_server_res('Access token missing required claims.'), 422

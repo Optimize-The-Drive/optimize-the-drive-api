@@ -4,8 +4,15 @@
 
 from app.models.user import User
 from app.repos.user import UserRepo
+from app.repos.jwt import JWTRepo
+from app.services.jwt import JWTService
 
-repo = UserRepo()
+# Repos for tests
+user_repo = UserRepo()
+jwt_repo = JWTRepo()
+
+# Services for tests
+jwt_service = JWTService()
 
 def add_user_to_db(username: str, email: str, password: str):
     '''
@@ -20,10 +27,11 @@ def add_user_to_db(username: str, email: str, password: str):
     '''
     user = User.create(username=username, email=email)
     user.set_password(password)
-    repo.add(user)
-    repo.commit()
+    user_repo.add(user)
+    user_repo.commit()
 
     return user
+
 
 def remove_user_from_db(user: User):
     '''
@@ -32,5 +40,5 @@ def remove_user_from_db(user: User):
         ARGS:
             User (user): The user to remove
     '''
-    repo.delete(user)
-    repo.commit()
+    user_repo.delete(user)
+    user_repo.commit()

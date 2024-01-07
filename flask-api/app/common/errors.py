@@ -12,4 +12,9 @@ class ServiceException(Exception):
     '''
         Custom Service Exception.
     '''
-    
+
+
+class TestException(Exception):
+    '''
+        Custom Exception for tests.
+    '''
