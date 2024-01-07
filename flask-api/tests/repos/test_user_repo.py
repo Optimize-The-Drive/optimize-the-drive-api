@@ -5,11 +5,7 @@
 import pytest
 
 from app.models.user import User
-from app.repos.user import UserRepo
-from tests.helpers import remove_user_from_db
-
-
-repo = UserRepo()
+from tests.helpers import remove_user_from_db, user_repo
 
 @pytest.mark.usefixtures("app_ctx")
 def test_by_username_and_id():
@@ -20,11 +16,11 @@ def test_by_username_and_id():
     user = User.create(username='test_user', email='test@email.com')
     user.set_password('test_password')
 
-    repo.add(user)
-    repo.commit()
+    user_repo.add(user)
+    user_repo.commit()
 
-    queried_user = repo.by_username(user.username)
-    queried_user_one = repo.by_id(user.id)
+    queried_user = user_repo.by_username(user.username)
+    queried_user_one = user_repo.by_id(user.id)
 
     assert queried_user.username == user.username and queried_user_one.username == user.username
 

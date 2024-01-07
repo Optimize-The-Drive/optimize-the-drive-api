@@ -5,6 +5,8 @@
 def test_correct_login(client):
     '''
         Tests that passing a correct username and password logs in correctly.
+        
+        POST /api/auth/login
     '''
     response = client.post(
         '/api/auth/login',
@@ -20,6 +22,8 @@ def test_correct_login(client):
 def test_wrong_login(client):
     '''
         Tests that passing in a wrong username/password prevents a user from logging in.
+        
+        POST /api/auth/login
     '''
     req = client.post(
         '/api/auth/login',
@@ -35,6 +39,8 @@ def test_wrong_login(client):
 def test_guarded_refresh(client):
     '''
         Tests that the refresh endpoint is guarded.
+        
+        POST /api/auth/refresh
     '''
 
     # No refresh token cookie is passed
@@ -46,6 +52,8 @@ def test_guarded_refresh(client):
 def test_refresh(auth_client):
     '''
         Tests that the refresh endpoint returns an access_token.
+        
+        POST /api/auth/refresh
     '''
     client, headers = auth_client
 
@@ -58,6 +66,8 @@ def test_refresh(auth_client):
 def test_guarded_logout(client):
     '''
         Tests that the logout endpoint is guarded.
+        
+        POST /api/auth/logout
     '''
     # No bearer token is passed
     res = client.post('/api/auth/logout')
@@ -68,6 +78,8 @@ def test_guarded_logout(client):
 def test_logout(auth_client):
     '''
         Tests that the logout endpoint works.
+        
+        POST /api/auth/logout
     '''
     client, headers = auth_client
 

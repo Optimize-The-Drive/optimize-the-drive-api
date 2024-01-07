@@ -8,10 +8,12 @@ from flask_jwt_extended import (
     create_refresh_token
 )
 
-from app.repos.jwt import JWTRepo
+from app.repos import jwt_repo
 from app.models.jwt import JWTType, JWT
 from app.common.errors import ServiceException
 
+
+JWT_REFRESH_CLAIMS = 'refresh_token'
 
 class JWTService:
     '''
@@ -26,7 +28,7 @@ class JWTService:
             blacklist_tokens
             is_token_revoked
     '''
-    _jwt_repo = JWTRepo()
+    _jwt_repo = jwt_repo
 
     def generate_access_refresh(self, identity: str = '') -> dict:
         '''
@@ -54,7 +56,7 @@ class JWTService:
             RETURNS:
                 str - new access token.
         '''
-        additional_claims = { 'refresh_token': refresh }
+        additional_claims = { JWT_REFRESH_CLAIMS: refresh }
         access_token = create_access_token(identity=identity, additional_claims=additional_claims)
 
         return access_token
@@ -64,7 +66,7 @@ class JWTService:
             Adds tokens to the blacklist jwt database table.
 
             ARGS:
-                token (str): Token to blacklist.
+                token (list): Token to blacklist.
         '''
 
         jwts = []

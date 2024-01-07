@@ -1,7 +1,10 @@
-"""Test Script for app.py"""
+""" Defines pytest fixures for the tests. """
+
+from time import time
 import pytest
 
 from app import create_app # pylint: disable=E0401
+from tests.helpers import add_user_to_db
 
 
 @pytest.fixture(scope='session')
@@ -44,7 +47,8 @@ def pytest_runtest_makereport(item, call): # pylint: disable=W0613
 
 
 @pytest.fixture
-def auth_client(client):
+@pytest.mark.usefixtures("app_ctx")
+def auth_client(request, client):
     '''
         Logs in an authenticated user to use in other tests.
 
@@ -55,6 +59,18 @@ def auth_client(client):
         'username': 'test-user',
         'password': 'test-password'
     }
+
+    if request and getattr(request, 'param', None):
+        username, password = request.param['username'], request.param['password']
+        login_data = {
+            'username': username,
+            'password': password
+        }
+        response = client.post('/api/auth/login', json=login_data)
+
+        if response.status_code == 401:
+            # use the standard register route in the future, potentially
+            _user = add_user_to_db(username, f'{time()}@testemail.com' , password)
 
     response = client.post('/api/auth/login', json=login_data)
     access_token = response.json['access_token']
