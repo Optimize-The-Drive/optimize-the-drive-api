@@ -2,7 +2,16 @@
 
 from datetime import datetime
 
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validate
+
+
+class UserRegex:
+    '''
+        Common User Schema REGEX strings.
+    '''
+    USERNAME = r'^[aA-zZ0-9.]{5,}$'
+    PASSWORD = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
+    EMAIL = r'^\S+@\S+\.\S+$'
 
 
 class UserAuthSchema(Schema):
@@ -10,9 +19,22 @@ class UserAuthSchema(Schema):
     username: str = fields.Str(required=True, load_only=True)
     password: str = fields.Str(required=True, load_only=True)
 
-class UserRegisterSchema(UserAuthSchema):
+
+class UserRegisterSchema(Schema):
     '''The User register schema.'''
-    email: str = fields.Str(required=True, load_only=True)
+    username: str = fields.Str(
+        required=True, load_only=True,
+        validate=validate.Regexp(UserRegex.USERNAME)
+    )
+    password: str = fields.Str(
+        required=True, load_only=True,
+        validate=validate.Regexp(UserRegex.PASSWORD)
+    )
+    email: str = fields.Str(
+        required=True, load_only=True,
+        validate=validate.Regexp(UserRegex.EMAIL)
+    )
+
 
 class UserResponseSchema(Schema):
     '''The User schema found in responses .'''
@@ -20,5 +42,3 @@ class UserResponseSchema(Schema):
     username: int = fields.Str(dump_only=True)
     email: int = fields.Str(dump_only=True)
     created_at: datetime = fields.Str(dump_only=True)
-
-# username_valid(username: str) -> 

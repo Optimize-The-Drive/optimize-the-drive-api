@@ -17,6 +17,7 @@ class BaseRepo:
             add_one
             add_many
             commit
+            exec
     '''
     _db: SQLAlchemy = db
 
@@ -51,7 +52,6 @@ class BaseRepo:
             RETURNS:
                 SqlAlchemy result
         '''
-        
         return self._db.session.execute(statement)
 
     def commit(self):

@@ -1,6 +1,6 @@
 ''' Defines the user routes. '''
 
-from flask import abort, request
+from flask import abort
 from flask_smorest import Blueprint
 from flask_jwt_extended import (
     jwt_required,
@@ -39,35 +39,7 @@ def register_user(register_data):
     except IntegrityError as e:
         print(e)
         abort(409, description='Username or email taken.')
-
     return new_user
-
-@user_routes.get('/email_unique')
-def email_unique():
-    '''
-        Checks if email is valid
-
-        RESPONSE:
-            200, boolean
-    '''
-    email_val = request.args.get('email', '')
-    existing_user = user_repo.by_email(email_val)
-
-    return create_server_res(existing_user is None), 200
-
-
-@user_routes.get('/username_unique')
-def username_unique():
-    '''
-        Checks if username is valid
-
-        RESPONSE:
-            200, boolean
-    '''
-    username_val = request.args.get('username', '')
-    existing_user = user_repo.by_username(username_val)
-
-    return create_server_res(existing_user is None), 200
 
 
 @user_routes.delete('/me')
