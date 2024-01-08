@@ -41,6 +41,19 @@ class BaseRepo:
         '''
         self._db.session.delete(asset)
 
+    def execute(self, statement):
+        '''
+            Executes a database statement.
+
+            ARGS:
+                statement (SqlAlchemy statement): Statement to execute.
+                
+            RETURNS:
+                SqlAlchemy result
+        '''
+        
+        return self._db.session.execute(statement)
+
     def commit(self):
         ''' Commits the assets to the database. '''
         self._db.session.commit()

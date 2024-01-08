@@ -53,6 +53,10 @@ def register_error_routes(app):
     def method_not_allowed(error):
         return create_server_res(error.description), 405
 
+    @app.errorhandler(409)
+    def resource_conflict(error):
+        return create_server_res(error.description), 409
+
     @app.errorhandler(422)
     def unprocessable_entity(error):
         return create_server_res(error.description), 422

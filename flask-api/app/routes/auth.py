@@ -1,6 +1,8 @@
 ''' Defines the session routes. '''
 
-from flask import jsonify, current_app, request
+from flask import (
+    jsonify, current_app, request, abort
+)
 from flask_smorest import Blueprint
 from flask_jwt_extended import (
     set_refresh_cookies,
@@ -12,7 +14,7 @@ from flask_jwt_extended import (
 
 from app.common.utility import create_server_res
 from app.repos import user_repo
-from app.schema.auth import LoginSchema
+from app.schema.user import UserAuthSchema
 from app.extensions import jwt
 from app.services import jwt_service
 from app.services.jwt import JWT_REFRESH_CLAIMS
@@ -21,7 +23,7 @@ from app.services.jwt import JWT_REFRESH_CLAIMS
 auth_routes = Blueprint("auth", __name__, url_prefix="/auth")
 
 @auth_routes.post('/login')
-@auth_routes.arguments(LoginSchema)
+@auth_routes.arguments(UserAuthSchema)
 def login(login_data):
     '''
         Handles user authentication. Returns an access token
@@ -47,7 +49,7 @@ def login(login_data):
 
         return response, 200
 
-    return create_server_res('Incorrect username or password.'), 401
+    abort(401, description="Username or password is incorrect.")
 
 
 @auth_routes.post('/refresh')
@@ -86,7 +88,7 @@ def logout():
     refresh_token = access_token_decoded[JWT_REFRESH_CLAIMS]
 
     if not refresh_token:
-        return create_server_res('Access token missing required claims.'), 422
+        abort(422, description='Access token missing required claims')
 
     refresh_token_decoded = decode_token(refresh_token)
 
