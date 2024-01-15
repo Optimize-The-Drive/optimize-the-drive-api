@@ -43,7 +43,7 @@ def register_user(register_data):
     user_repo.add(new_user)
     user_repo.commit()
 
-    return new_user
+    return {'user': new_user }
 
 
 @user_routes.delete('/me')

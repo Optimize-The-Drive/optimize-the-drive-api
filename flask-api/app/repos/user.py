@@ -4,10 +4,7 @@
 from app.models.user import User
 from .base import BaseRepo
 
-cols = {
-    'username': User.username,
-    'email': User.email,
-}
+
 class UserRepo(BaseRepo):
     '''
 		JWTRepo defintion. Extends the BaseRepository.

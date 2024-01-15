@@ -1,8 +1,5 @@
 '''Defines user schemas.'''
 
-from datetime import datetime
-
-
 from marshmallow import fields, validate, validates_schema
 from marshmallow.exceptions import ValidationError
 
@@ -21,7 +18,7 @@ class UserRegex:
     # Contains an uppercase/lowercase letter, number, symbol
     PASSWORD = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,32}$'
     # Email must follow pattern _@_._ and be no more than 128 characters
-    EMAIL = r'^[\S+@\S+\.\S+$]{5,128}$'
+    EMAIL = r'^\S+@\S+\.\S+$'
 
 class UserAuthSchema(BaseSchema):
     '''The User auth schema.'''
@@ -48,16 +45,21 @@ class UserRegisterSchema(BaseSchema):
     )
 
     @validates_schema
-    def check_password(self, data, **_kwargs):
+    def validate_schema(self, data, **_kwargs):
         '''
             Confirms that the password and confirm_password fields match.
         '''
         if data['password'] != data['confirm_password']:
             raise ValidationError({'confirm_password': 'Passwords do not match.'})
 
+        if len(data['email']) > 128:
+            raise ValidationError({'email': 'Email does not match expected pattern.'})
+
 class UserResponseSchema(BaseSchema):
     '''The User schema found in responses .'''
-    id: int = fields.Int(dump_only=True)
-    username: int = fields.Str(dump_only=True)
-    email: int = fields.Str(dump_only=True)
-    created_at: datetime = fields.Str(dump_only=True)
+    user = fields.Nested({
+        'id': fields.Int(dump_only=True),
+        'username': fields.Str(dump_only=True),
+        'email': fields.Str(dump_only=True),
+        'created_at': fields.DateTime(dump_only=True)
+    })

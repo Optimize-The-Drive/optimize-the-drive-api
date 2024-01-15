@@ -2,6 +2,8 @@
     Helper functions for tests.
 '''
 
+import json
+
 from app.models.user import User
 from app.repos.user import UserRepo
 from app.repos.jwt import JWTRepo
@@ -42,3 +44,16 @@ def remove_user_from_db(user: User):
     '''
     user_repo.delete(user)
     user_repo.commit()
+
+
+def get_response_body(response) -> dict:
+    '''
+        Parses and returns the response body
+        
+        ARGS:
+            response: Response
+        
+        Returns:
+            response body - dict
+    '''
+    return json.loads(response.data.decode('utf-8'))
