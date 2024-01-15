@@ -6,7 +6,6 @@ from flask_jwt_extended import (
     jwt_required,
     get_current_user
 )
-from sqlalchemy.exc import IntegrityError
 
 from app.common.utility import create_server_res
 from app.repos import user_repo
@@ -30,15 +29,20 @@ def register_user(register_data):
     password = register_data['password']
     email = register_data['email']
 
+    user_by_email = user_repo.by_email(email)
+    user_by_username = user_repo.by_username(username)
+
+    if user_by_email:
+        abort(409, description={'email': 'Email already taken.'})
+    elif user_by_username:
+        abort(409, description={'username': 'username already taken.'})
+
     new_user = User.create(username=username, email=email)
     new_user.set_password(password)
 
-    try:
-        user_repo.add(new_user)
-        user_repo.commit()
-    except IntegrityError as e:
-        print(e)
-        abort(409, description='Username or email taken.')
+    user_repo.add(new_user)
+    user_repo.commit()
+
     return new_user
 
 

@@ -18,3 +18,8 @@ class TestException(Exception):
     '''
         Custom Exception for tests.
     '''
+
+class SchemaException(Exception):
+    '''
+        Custom Schema Error
+    '''

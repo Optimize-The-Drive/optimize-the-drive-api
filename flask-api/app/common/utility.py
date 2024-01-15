@@ -13,8 +13,8 @@ def create_server_res(message: str) -> dict:
             message (str): message to encapsulate.
 
         RETURNS:
-            Dict { res: <message> } - The JSONified message.
+            Dict { msg: <message> } - The JSONified message.
     '''
     return jsonify({
-        'res': message
+        'msg': message
     })
