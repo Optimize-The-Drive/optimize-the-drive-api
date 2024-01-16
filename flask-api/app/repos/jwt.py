@@ -21,6 +21,4 @@ class JWTRepo(BaseRepo):
             returns:
                 JWT - The queried JWT.
         '''
-        return self._db.session.execute(
-            self._db.select(JWT).filter_by(jti=jti)
-        ).scalar()
+        return self.execute(self._db.select(JWT).filter_by(jti=jti)).scalar()

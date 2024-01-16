@@ -17,6 +17,7 @@ class BaseRepo:
             add_one
             add_many
             commit
+            exec
     '''
     _db: SQLAlchemy = db
 
@@ -40,6 +41,18 @@ class BaseRepo:
                 asset (object): Asset to remove from the db.
         '''
         self._db.session.delete(asset)
+
+    def execute(self, statement):
+        '''
+            Executes a database statement.
+
+            ARGS:
+                statement (SqlAlchemy statement): Statement to execute.
+                
+            RETURNS:
+                SqlAlchemy result
+        '''
+        return self._db.session.execute(statement)
 
     def commit(self):
         ''' Commits the assets to the database. '''

@@ -21,7 +21,12 @@ def test_by_username_and_id():
 
     queried_user = user_repo.by_username(user.username)
     queried_user_one = user_repo.by_id(user.id)
+    queried_user_two = user_repo.by_email(user.email)
 
-    assert queried_user.username == user.username and queried_user_one.username == user.username
+    assert (
+        queried_user.username == user.username and
+        queried_user_one.username == user.username and
+        queried_user_two.username == user.username
+    )
 
     remove_user_from_db(user)

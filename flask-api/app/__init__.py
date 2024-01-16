@@ -4,10 +4,12 @@
 import traceback
 
 from flask import Flask
+from marshmallow import ValidationError
 
 from app.routes import api_routes
 from app.models.user import User
 from app.models.jwt import JWT
+from app.common.errors import SchemaException
 from app.common.utility import create_server_res
 from app.extensions import db, jwt, migrate
 from config import get_environment
@@ -36,7 +38,6 @@ def register_error_routes(app):
     '''
         Assigns handlers for common API error codes.
     '''
-
     @app.errorhandler(400)
     def bad_request(error):
         return create_server_res(error.description), 400
@@ -53,13 +54,24 @@ def register_error_routes(app):
     def method_not_allowed(error):
         return create_server_res(error.description), 405
 
+    @app.errorhandler(409)
+    def resource_conflict(error):
+        return create_server_res(error.description), 409
+
     @app.errorhandler(422)
     def unprocessable_entity(error):
         return create_server_res(error.description), 422
 
+    @app.errorhandler(SchemaException)
+    def schema_error(error):
+        return create_server_res(error.args), 422
+
     @app.errorhandler(Exception)
     def server_error(error):
-        '''Catch-all error handler.'''
+        '''
+            Catch-all error handler. Catches any error that is not handled above.
+        '''
+        print(type(error), flush=True)
         # Replace with logger
         print(''.join(traceback.format_exception(None, error, error.__traceback__)), flush=True)
 
