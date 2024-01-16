@@ -10,6 +10,7 @@ from app.routes import api_routes
 from app.models.user import User
 from app.models.jwt import JWT
 from app.common.errors import SchemaException
+from app.common.logger import configure_logger
 from app.common.utility import create_server_res
 from app.extensions import db, jwt, migrate
 from config import get_environment
@@ -32,9 +33,13 @@ def create_app(config=get_environment()):
     # Initialize JWT
     jwt.init_app(app)
 
+    # Configure logger
+    configure_logger(app)
+
     return app
 
-def register_error_routes(app):
+
+def register_error_routes(app: Flask):
     '''
         Assigns handlers for common API error codes.
     '''
@@ -71,8 +76,7 @@ def register_error_routes(app):
         '''
             Catch-all error handler. Catches any error that is not handled above.
         '''
-        print(type(error), flush=True)
-        # Replace with logger
-        print(''.join(traceback.format_exception(None, error, error.__traceback__)), flush=True)
+        app.logger.error(type(error))
+        app.logger.error(''.join(traceback.format_exception(None, error, error.__traceback__)))
 
         return create_server_res('Internal server error.'), 500

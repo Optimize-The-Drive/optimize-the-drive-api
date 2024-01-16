@@ -70,6 +70,7 @@ class JWTService:
         '''
 
         jwts = []
+        current_app.logger.info(f'blacklisting tokens: {tokens}')
 
         for token in tokens:
             try:

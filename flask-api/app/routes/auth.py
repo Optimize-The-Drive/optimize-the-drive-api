@@ -47,6 +47,8 @@ def login(login_data):
         response = jsonify(access_token=tokens['access'])
         set_refresh_cookies(response, tokens['refresh'])
 
+        current_app.logger.info(f'User ({user.username}:${user.id}) logged in.')
+
         return response, 200
 
     abort(401, description="Username or password is incorrect.")

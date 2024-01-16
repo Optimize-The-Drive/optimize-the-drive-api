@@ -2,7 +2,7 @@
     All routes are assigned to the base API blueprint in
     this file.
 '''
-from flask import Blueprint
+from flask import Blueprint, current_app
 
 from app.common.utility import create_server_res
 from app.routes.auth import auth_routes

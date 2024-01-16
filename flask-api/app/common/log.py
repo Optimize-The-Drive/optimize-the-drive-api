@@ -1,3 +1,0 @@
-'''
-    TODO Houses Logger defintion.
-'''
