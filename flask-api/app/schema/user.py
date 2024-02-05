@@ -13,7 +13,7 @@ class UserRegex:
     # 5-20 Characters (including . _)
     # No sequentially repeating symbols
     # Symbols cannot be at the beginning or end of the username
-    USERNAME = r'^(?=[a-zA-Z0-9._]{5,20}$)(?!.*[_.]{2})[^_.].*[^_.]$'
+    USERNAME = r'^(?=[a-zA-Z0-9._]{5,32}$)(?!.*[_.]{2})[^_.].*[^_.]$'
     # 8-32 characters
     # Contains an uppercase/lowercase letter, number, symbol
     PASSWORD = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,32}$'

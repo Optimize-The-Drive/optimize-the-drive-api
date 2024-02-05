@@ -1,6 +1,6 @@
 ''' Defines the user routes. '''
 
-from flask import abort
+from flask import abort, current_app
 from flask_smorest import Blueprint
 from flask_jwt_extended import (
     jwt_required,
@@ -8,6 +8,7 @@ from flask_jwt_extended import (
 )
 
 from app.common.utility import create_server_res
+from app.common.logger import log_details
 from app.repos import user_repo
 from app.models.user import User
 from app.schema.user import UserResponseSchema, UserRegisterSchema
@@ -43,6 +44,8 @@ def register_user(register_data):
     user_repo.add(new_user)
     user_repo.commit()
 
+    current_app.logger.info(log_details(f'User created: {new_user.id}'))
+
     return {'user': new_user }
 
 
@@ -60,6 +63,8 @@ def delete_me():
     if user:
         user_repo.delete(user)
         user_repo.commit()
-        return create_server_res('User deleted successfully.'), 200
+        current_app.logger.info(log_details('User self deleted.'))
+
+        return create_server_res('User deleted successfully.', 200)
 
     abort(404, description='User not found.')

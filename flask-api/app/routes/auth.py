@@ -22,6 +22,7 @@ from app.services.jwt import JWT_REFRESH_CLAIMS
 
 auth_routes = Blueprint("auth", __name__, url_prefix="/auth")
 
+
 @auth_routes.post('/login')
 @auth_routes.arguments(UserAuthSchema)
 def login(login_data):
@@ -94,7 +95,7 @@ def logout():
 
     jwt_service.blacklist_tokens([access_token_decoded, refresh_token_decoded])
 
-    return create_server_res('Sucessfully logged out.'), 200
+    return create_server_res('Sucessfully logged out.', 200)
 
 
 @jwt.user_lookup_loader
