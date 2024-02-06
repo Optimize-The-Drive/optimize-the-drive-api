@@ -4,7 +4,6 @@ from time import time
 import pytest
 
 from app import create_app # pylint: disable=E0401
-from tests.helpers import add_user_to_db
 
 
 @pytest.fixture(scope='session')
