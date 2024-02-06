@@ -210,7 +210,7 @@ def test_user_get_guarded(client):
     '''
         Tests that the user get route is protected.
 
-        DELETE /api/user/me
+        GET /api/user/me
     '''
     response = client.get('/api/user/me')
 
