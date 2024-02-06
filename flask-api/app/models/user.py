@@ -38,8 +38,9 @@ class User(db.Model, BaseModel):
     created_at: Mapped[datetime] = mapped_column(db.DateTime, unique=False, default=datetime.now)
     # pylint: disable-next=E1136
     verified: Mapped[bool] = mapped_column(db.Boolean, unique=False, nullable=False, default=False)
-    # pylint: disable-next=E1136
+
     jwts = db.relationship("JWT", cascade="all,delete", back_populates="user")
+    trips = db.relationship("Trip", cascade="all,delete", back_populates="user")
 
     def to_obj(self) -> dict:
         '''

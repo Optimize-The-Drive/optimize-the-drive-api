@@ -9,6 +9,7 @@ from werkzeug.exceptions import default_exceptions
 from app.routes import api_routes
 from app.models.user import User
 from app.models.jwt import JWT
+from app.models.trip import Trip
 from app.common.errors import SchemaException
 from app.common.logger import configure_logger, log_details
 from app.common.utility import create_server_res
