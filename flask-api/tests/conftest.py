@@ -4,7 +4,6 @@ from time import time
 import pytest
 
 from app import create_app # pylint: disable=E0401
-from tests.helpers import add_user_to_db
 
 
 @pytest.fixture(scope='session')
@@ -69,8 +68,14 @@ def auth_client(request, client):
         response = client.post('/api/auth/login', json=login_data)
 
         if response.status_code == 401:
-            # use the standard register route in the future, potentially
-            _user = add_user_to_db(username, f'{time()}@testemail.com' , password)
+            register_data = {
+                'username': username,
+                'email': f'{time()}@testemail.com',
+                'password': password,
+                'confirm_password': password
+            }
+
+            _res = client.post('/api/user/register', json=register_data)
 
     response = client.post('/api/auth/login', json=login_data)
     access_token = response.json['access_token']

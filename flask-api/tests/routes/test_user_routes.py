@@ -5,10 +5,10 @@
 import pytest
 
 from tests.helpers import (
-    user_repo, get_response_body,
+    user_repo, get_response_body
 )
 
-# USER CREATE
+########### USER CREATE #################
 def test_user_create(client):
     '''
         Tests that user creation route as intended.
@@ -151,10 +151,10 @@ def test_user_exists(client):
     assert response1.status_code == 409
 
 
-# USER DELETE
+########## USER DELETE ##############
 @pytest.mark.parametrize(
     'auth_client',
-    [{'username': 'testuserdelete', 'password': 'testuserdeletepassword'}],
+    [{'username': 'testuserdelete', 'password': 'Testuserdeletepassword1!'}],
     indirect=True
 )
 @pytest.mark.usefixtures("app_ctx")
@@ -174,14 +174,44 @@ def test_user_delete(auth_client):
     assert response.status_code == 200 and response1.status_code == 401 and user is None
 
 
-
 def test_user_delete_guarded(client):
     '''
         Tests that the user deletion route is protected.
 
         DELETE /api/user/me
     '''
-
     response = client.delete('/api/user/me')
+
+    assert response.status_code == 401
+
+
+############## USER GET #################
+@pytest.mark.parametrize(
+    'auth_client',
+    [{'username': 'user_get', 'password': 'Usergetpassword1!'}],
+    indirect=True
+)
+@pytest.mark.usefixtures("app_ctx")
+def test_user_get(auth_client):
+    '''
+        Tests that the user get returns the logged in user.
+
+        GET /api/user/me
+    '''
+    client, headers = auth_client
+
+    response = client.get('/api/user/me', headers={'Authorization': headers['Authorization']})
+    me = get_response_body(response)['user']
+
+    assert response.status_code == 200 and me['username'] == 'user_get'
+
+
+def test_user_get_guarded(client):
+    '''
+        Tests that the user get route is protected.
+
+        GET /api/user/me
+    '''
+    response = client.get('/api/user/me')
 
     assert response.status_code == 401

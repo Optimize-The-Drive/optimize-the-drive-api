@@ -46,7 +46,25 @@ def register_user(register_data):
 
     current_app.logger.info(log_details(f'User created: {new_user.id}'))
 
-    return {'user': new_user }
+    return {'user': new_user}
+
+
+@user_routes.get('/me')
+@user_routes.response(200, UserResponseSchema)
+@jwt_required()
+def get_me():
+    '''
+        Returns the requesting user's information.
+        
+        RESPONSE:
+            200, user
+    '''
+    user = get_current_user()
+
+    if user:
+        return {'user': user}
+
+    abort(404, description='User not found.')
 
 
 @user_routes.delete('/me')
