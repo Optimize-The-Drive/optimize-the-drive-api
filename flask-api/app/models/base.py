@@ -10,7 +10,6 @@ class BaseModel():
         attributes:
             id (int): database row ID of the model.
         methods:
-            abstract to_json
             abstract create
     '''
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)

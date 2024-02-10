@@ -23,7 +23,6 @@ class User(db.Model, BaseModel):
             created_at: DateTime
             verified: Boolean
         methods:
-            to_json
             create
             set_password
             validate_password

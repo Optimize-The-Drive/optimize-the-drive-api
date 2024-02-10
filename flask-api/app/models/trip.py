@@ -22,8 +22,8 @@ class Trip(db.Model, BaseModel):
             modified_at: Date
             user_id: User
         methods:
-            to_json
             create
+            set_points
     '''
     __tablename__ = 'trip'
 

@@ -11,7 +11,6 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
-
 # revision identifiers, used by Alembic.
 revision = '9fc7409ae264'
 down_revision = None
@@ -93,5 +92,5 @@ def downgrade():
     op.drop_table('jwt')
     op.drop_table('users')
     op.execute('drop type if exists jwttype')
-    op.execute('drop trigger if exists trig_update_trip_modified_at')
+    op.execute('drop function if exists update_trip_modified_at')
     # ### end Alembic commands ###

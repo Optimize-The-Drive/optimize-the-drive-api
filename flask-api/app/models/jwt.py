@@ -30,7 +30,6 @@ class JWT(db.Model, BaseModel):
             user_id (int): User that the JWT belongs to.
             expires (datetime): Time that the JWT expires.
         methods:
-            to_json
             create
     '''
     __tablename__ = 'jwt'
