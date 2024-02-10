@@ -15,14 +15,6 @@ class BaseModel():
     '''
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
 
-    def to_obj(self) -> dict:
-        '''
-            Abstract to_json method for a model.
-            
-            RETURNS NotImplementedError.
-        '''
-        raise NotImplementedError("Please implement this method")
-
     @staticmethod
     def create(**kwargs):
         '''

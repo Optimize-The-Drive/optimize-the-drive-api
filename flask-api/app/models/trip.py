@@ -1,7 +1,8 @@
 '''  Defines the Trip model class. '''
 from datetime import datetime
 
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import func
+from sqlalchemy.orm import Mapped, mapped_column, deferred
 from sqlalchemy.dialects.postgresql import JSONB
 
 from app.common.errors import ModelException
@@ -27,13 +28,13 @@ class Trip(db.Model, BaseModel):
     __tablename__ = 'trip'
 
     # pylint: disable-next=E1136
-    name: Mapped[str] = mapped_column(db.String(32), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(db.String(32), unique=False, nullable=False)
     # pylint: disable-next=E1136
-    description: Mapped[str] = mapped_column(db.String(250), unique=True, nullable=True)
+    description: Mapped[str] = mapped_column(db.String(250), unique=False, nullable=True)
     # pylint: disable-next=E1136
-    points: Mapped[str] = mapped_column(JSONB , unique=False, nullable=False)
-    # pylint: disable-next=E1136
-    modified_at: Mapped[datetime] = mapped_column(db.DateTime, unique=False, default=datetime.now)
+    points: Mapped[JSONB] = deferred(mapped_column(JSONB, unique=False, nullable=True))
+    # pylint: disable-next=E1136,E1102,C0301
+    modified_at: Mapped[datetime] = mapped_column(db.DateTime, unique=False,server_default=func.now())
     # pylint: disable-next=E1136
     user_id: Mapped[int] = mapped_column(
         db.Integer,
@@ -42,26 +43,6 @@ class Trip(db.Model, BaseModel):
         index=True
     )
     user = db.relationship("User", back_populates="trips")
-
-    def to_obj(self, with_points=True) -> dict:
-        '''
-            Returns the JSON representation of a Trip model.
-
-            RETURNS:
-                dict { id, name, description, modified_at, points }
-        '''
-
-        trip = {
-            'id': self.id,
-            'name': self.name,
-            'description': self.description,
-            'modified_at': self.modified_at,
-        }
-
-        if with_points:
-            trip['points'] = self.points
-
-        return trip
 
     @staticmethod
     def create(**kwargs):
@@ -75,8 +56,9 @@ class Trip(db.Model, BaseModel):
         '''
         trip = Trip()
 
-        if 'name' in kwargs:
+        if 'name' in kwargs and 'user_id' in kwargs:
             trip.name = kwargs.get('name')
+            trip.user_id = kwargs.get('user_id')
         else:
             raise ModelException('Missing name parameter.')
         return trip
@@ -88,11 +70,11 @@ class Trip(db.Model, BaseModel):
             ARGS:
                 points (list) - The route points
         '''
-        if points:
-            points = {
-                'points': list
+        if points and isinstance(points, list):
+            new_points = {
+                'points': points
             }
 
-            self.points = points
-
-        raise ModelException('Expecting a list of points. Recieved none.')
+            self.points = new_points
+        else:
+            raise ModelException('Expecting a list of points.')

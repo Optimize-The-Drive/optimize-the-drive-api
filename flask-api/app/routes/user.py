@@ -59,7 +59,7 @@ def get_me():
         RESPONSE:
             200, user
     '''
-    user = get_current_user()
+    user: User = get_current_user()
 
     if user:
         return {'user': user}

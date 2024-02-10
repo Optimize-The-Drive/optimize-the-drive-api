@@ -2,7 +2,9 @@
 from datetime import datetime
 
 from passlib.hash import bcrypt_sha256
+from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.sql import expression
 
 from app.common.errors import ModelException
 from app.extensions import db
@@ -34,28 +36,13 @@ class User(db.Model, BaseModel):
     email: Mapped[str] = mapped_column(db.String(128), unique=True, nullable=False)
     # pylint: disable-next=E1136
     password_hash: Mapped[str] = mapped_column(db.String(128), unique=False, nullable=False)
-    # pylint: disable-next=E1136
-    created_at: Mapped[datetime] = mapped_column(db.DateTime, unique=False, default=datetime.now)
-    # pylint: disable-next=E1136
-    verified: Mapped[bool] = mapped_column(db.Boolean, unique=False, nullable=False, default=False)
+    # pylint: disable-next=E1136,E1102,C0301
+    created_at: Mapped[datetime] = mapped_column(db.DateTime, unique=False, server_default=func.now())
+    # pylint: disable-next=E1136,C0301
+    verified: Mapped[bool] = mapped_column(db.Boolean, unique=False, nullable=False, server_default=expression.false())
 
     jwts = db.relationship("JWT", cascade="all,delete", back_populates="user")
     trips = db.relationship("Trip", cascade="all,delete", back_populates="user")
-
-    def to_obj(self) -> dict:
-        '''
-            Returns the JSON representation of a User model.
-
-            RETURNS:
-                dict { id, username, email, created_at, verified }
-        '''
-        return {
-            'id': self.id,
-            'username': self.username,
-            'email': self.email,
-            'created_at': self.created_at,
-            'verified': self.verified
-        }
 
     @staticmethod
     def create(**kwargs):

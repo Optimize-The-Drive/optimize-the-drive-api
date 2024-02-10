@@ -74,6 +74,3 @@ class JWT(db.Model, BaseModel):
         else:
             raise ModelException('Missing jti, type, user_id, or expires parameters.')
         return jwt
-
-    def to_obj(self) -> dict:
-        '''Not Implemented'''
