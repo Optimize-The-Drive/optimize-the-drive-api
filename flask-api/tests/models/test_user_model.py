@@ -17,10 +17,9 @@ def test_create():
         Tests that user creation works as expected.
     '''
     user = User.create(username=TEST_USERNAME, email=TEST_EMAIL)
-    user_obj = user.to_obj()
 
-    assert user_obj['username'] == TEST_USERNAME
-    assert user_obj['email'] == TEST_EMAIL
+    assert user.username == TEST_USERNAME
+    assert user.email == TEST_EMAIL
 
 
 @pytest.mark.usefixtures("app_ctx")

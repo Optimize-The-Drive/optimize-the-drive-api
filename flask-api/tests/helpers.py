@@ -7,11 +7,14 @@ import json
 from app.models.user import User
 from app.repos.user import UserRepo
 from app.repos.jwt import JWTRepo
+from app.repos.trip import TripRepo
 from app.services.jwt import JWTService
+
 
 # Repos for tests
 user_repo = UserRepo()
 jwt_repo = JWTRepo()
+trip_repo = TripRepo()
 
 # Services for tests
 jwt_service = JWTService()

@@ -30,7 +30,6 @@ class JWT(db.Model, BaseModel):
             user_id (int): User that the JWT belongs to.
             expires (datetime): Time that the JWT expires.
         methods:
-            to_json
             create
     '''
     __tablename__ = 'jwt'
@@ -74,6 +73,3 @@ class JWT(db.Model, BaseModel):
         else:
             raise ModelException('Missing jti, type, user_id, or expires parameters.')
         return jwt
-
-    def to_obj(self) -> dict:
-        '''Not Implemented'''

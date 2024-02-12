@@ -4,6 +4,7 @@ from time import time
 import pytest
 
 from app import create_app # pylint: disable=E0401
+from tests.helpers import add_user_to_db
 
 
 @pytest.fixture(scope='session')
@@ -82,3 +83,14 @@ def auth_client(request, client):
     csrf_token = client.get_cookie('csrf_refresh_token').value
 
     return [client, {'Authorization': f'Bearer {access_token}', 'X-CSRF-TOKEN': csrf_token }]
+
+
+@pytest.fixture
+@pytest.mark.usefixtures("app_ctx")
+def user_in_db():
+    '''
+        Fixture to add a user to the db for a test.
+    '''
+    user = add_user_to_db(f'{time()}-user', f'{time()}@testemail.com', f'{time()}-password')
+
+    return user

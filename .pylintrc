@@ -3,6 +3,7 @@
 # Custom Disables
 disable = R0903, # too-few-public-methods
             W0621, # redefined-outer-name
+            R0801 # Similar lines
 
 # Analyse import fallback blocks. This can be used to support both Python 2 and
 # 3 compatible code, which means that the block might have code that exists
