@@ -1,4 +1,5 @@
 #!/bin/bash
+
 DATA_PATH=$(dirname $(realpath -s $0))/data
 
 container_exists() {
@@ -11,8 +12,10 @@ container_exists() {
 
 process_data() {
     echo "Purging ${DATA_PATH}"
-    rm -rf $"DATA_PATH"
-    docker rm osrm-extract osrm-partition osrm-customize &> /dev/null || true
+    rm -rf "$DATA_PATH"
+
+    docker stop osrm-extract osrm-partition osrm-customize osrm-server &> /dev/null || true
+    docker rm osrm-extract osrm-partition osrm-customize osrm-server &> /dev/null || true
 
     # re-generate input data for the service
     wget -P $DATA_PATH http://download.geofabrik.de/north-america/us/ohio-latest.osm.pbf
@@ -22,6 +25,8 @@ process_data() {
 }
 
 run_service() {
+    echo Starting service...
+
     if ! [ -d  "${DATA_PATH}" ]; then
         echo "DATA directory doesn't exist. Exiting..."
         exit 1
@@ -35,7 +40,14 @@ run_service() {
 }
 
 stop_service() {
+    echo Stopping service...
     docker stop osrm-server &> /dev/null || true
+}
+
+attach_service() {
+    echo Attaching to service...
+    docker attach osrm-server 2> /dev/null || echo "Unable to attach to the OSRM service. Ensure the service is running."
+    exit 1
 }
 
 help()
@@ -43,33 +55,43 @@ help()
    # Display Help
    echo "Runs OSRM service related functions."
    echo
-   echo "Syntax: osrm [-h|g|r]"
-   echo "options:"
-   echo "g     Generate the OSRM map data."
-   echo "s     Start the OSRM service."
-   echo "e     Exit the OSRM service."
-   echo "h     Print this help."
+   echo "Syntax: osrm [OPTION]..."
+   echo "OPTIONS:"
+   echo "-g, --generate   Generate the OSRM map data."
+   echo "-s, --start      Start the OSRM service."
+   echo "-e, --stop      Exit the OSRM service."
+   echo "-a, --attach     Attach to the service output."
+   echo "-i, --status     Get status of the service."
+   echo "-h, --help       Print this help."
 }
 
-while getopts "hgse" option; do
-   case $option in
-        h) # display Help
+options=$(getopt -o hgsea -l help,generate,start,stop,attach -n "$0" -- "$@") || exit
+eval set -- "$options"
+
+# Parse short options
+# while getopts "hgsea" option; do
+while [[ $1 != -- ]]; do
+   case $1 in
+        -h|--help) # display Help
             help
+            shift 1
             ;;
-        g) # generate data
+        -g|--generate) # generate data
             process_data
+            shift 1
             ;;
-        s) # Run service
+        -s|--start) # Run service
             run_service
+            shift 1
             ;;
-        e) # Stop service
+        -e|--stop) # Stop service
             stop_service
+            shift 1
             ;;
+        -a|--attach) # Stop service
+            attach_service
+            shift 1
+        ;;
+        *) echo "bad option: $1" >&2; exit 1;;
    esac
 done
-
-if [ $OPTIND -eq 1 ]; then
-    help
-fi
-
-
