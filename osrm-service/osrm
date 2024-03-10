@@ -50,6 +50,11 @@ attach_service() {
     exit 1
 }
 
+get_status() {
+    status=$(docker container inspect -f '{{.State.Status}}' osrm-server 2>/dev/null || echo Error retreving status. Make sure the service has been created.)
+    echo "OSRM Service: ${status^^}"
+}
+
 help()
 {
    # Display Help
@@ -59,13 +64,13 @@ help()
    echo "OPTIONS:"
    echo "-g, --generate   Generate the OSRM map data."
    echo "-s, --start      Start the OSRM service."
-   echo "-e, --stop      Exit the OSRM service."
+   echo "-e, --stop       Exit the OSRM service."
    echo "-a, --attach     Attach to the service output."
    echo "-i, --status     Get status of the service."
    echo "-h, --help       Print this help."
 }
 
-options=$(getopt -o hgsea -l help,generate,start,stop,attach -n "$0" -- "$@") || exit
+options=$(getopt -o hgseai -l help,generate,start,stop,attach,status -n "$0" -- "$@") || exit
 eval set -- "$options"
 
 # Parse short options
@@ -88,8 +93,12 @@ while [[ $1 != -- ]]; do
             stop_service
             shift 1
             ;;
-        -a|--attach) # Stop service
+        -a|--attach) # Attach to process
             attach_service
+            shift 1
+            ;;
+        -i|--status) # Get service status
+            get_status
             shift 1
         ;;
         *) echo "bad option: $1" >&2; exit 1;;
