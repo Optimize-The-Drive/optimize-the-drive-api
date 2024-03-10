@@ -3,6 +3,7 @@ Flask-SQLAlchemy
 Flask-Smorest
 Flask-JWT-Extended
 flask-migrate
+flask-socketio
 gunicorn
 marshmallow
 passlib

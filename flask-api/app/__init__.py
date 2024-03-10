@@ -13,7 +13,7 @@ from app.models.trip import Trip
 from app.common.errors import SchemaException
 from app.common.logger import configure_logger, log_details
 from app.common.utility import create_server_res
-from app.extensions import db, jwt, migrate
+from app.extensions import db, jwt, migrate, socketio
 from config import get_environment
 
 
@@ -36,6 +36,9 @@ def create_app(config=get_environment()):
 
     # Configure logger
     configure_logger(app)
+
+    # Configure SockerIO
+    socketio.init_app(app)
 
     return app
 
@@ -89,6 +92,10 @@ def register_error_routes(app: Flask):
     def schema_error(error):
         app.logger.error(log_details(f'{error.args}'))
         return create_server_res(error.args, 422)
+
+    @socketio.on_error()
+    def error_handler(error):
+        app.logger.error(log_details(f'{error.args}'))
 
     @app.errorhandler(Exception)
     def server_error(error):
