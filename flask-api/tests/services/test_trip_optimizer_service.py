@@ -1,7 +1,7 @@
 '''
     Defines TripOptimizer Tests.
 '''
-
+import pytest
 from app.services.trip_optimizer import TripOptimizerService, Mode
 
 
@@ -32,12 +32,13 @@ def test_set_mode():
 
     assert service._mode == testMode
 
+@pytest.mark.usefixtures("app_ctx")
 def test_generate_url():
     '''
         Tests Generating URL
     '''
-    test_url_first_last = "http://localhost:5000/trip/v1/driving/-83.12345,40.12345;-83.12345,40.12345?source=first&destination=last"
-    test_url_round_trip = "http://localhost:5000/trip/v1/driving/-83.12345,40.12345;-83.12345,40.12345"
+    test_url_first_last = "http://localhost:5050/trip/v1/driving/-83.12345,40.12345;-83.12345,40.12345?source=first&destination=last"
+    test_url_round_trip = "http://localhost:5050/trip/v1/driving/-83.12345,40.12345;-83.12345,40.12345"
     
     service = TripOptimizerService()
 

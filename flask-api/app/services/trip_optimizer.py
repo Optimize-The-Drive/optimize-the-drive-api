@@ -1,7 +1,6 @@
 '''Service for handling OSRM interaction '''
 from enum import Enum
-
-BASE_OSRM_URL = "http://localhost:5000/trip/v1/driving/"
+from flask import current_app
 
 class Mode(Enum):
     ''' 
@@ -50,6 +49,7 @@ class TripOptimizerService:
         '''
         self._mode = mode
 
+    
     def _generate_url(self):
         ''' 
             Uses the base url, points, and mode to generate the request URL.
@@ -57,7 +57,7 @@ class TripOptimizerService:
             Returns:
                 string: The generated url 
         '''
-        url = BASE_OSRM_URL
+        url = current_app.config['BASE_OSRM_URL']
         
         for i, p in enumerate(self._points):
             url += str(p["lat"]) + "," + str(p["lon"])
