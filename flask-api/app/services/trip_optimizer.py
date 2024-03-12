@@ -1,6 +1,8 @@
 '''Service for handling OSRM interaction '''
 from enum import Enum
 
+BASE_OSRM_URL = "http://localhost:5000/trip/v1/driving/"
+
 class Mode(Enum):
     ''' 
         Enum defining the Mode of the trip
@@ -55,7 +57,18 @@ class TripOptimizerService:
             Returns:
                 string: The generated url 
         '''
-        return None
+        url = BASE_OSRM_URL
+        
+        for i, p in enumerate(self._points):
+            url += str(p["lat"]) + "," + str(p["lon"])
+            if i < len(self._points) - 1:
+                url += ";"
+
+        if self._mode == Mode.FIRST_LAST:
+            url += "?source=first&destination=last"
+        return url
+        
+            
 
     def generate(self):
         ''' 
