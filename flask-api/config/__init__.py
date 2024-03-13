@@ -39,6 +39,7 @@ class Config():
 
     OSRM_PORT = 5000
     BASE_OSRM_URL = "http://localhost:" + str(OSRM_PORT) + "/trip/v1/driving/"
+    
 
 class DevConfig(Config):
     ''' Config for Dev Environment. '''

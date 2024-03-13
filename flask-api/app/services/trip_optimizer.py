@@ -1,6 +1,10 @@
 '''Service for handling OSRM interaction '''
 from enum import Enum
 from flask import current_app
+import requests
+
+from app.common.errors import ServiceException
+
 
 class Mode(Enum):
     ''' 
@@ -26,6 +30,10 @@ class TripOptimizerService:
     '''
     _points = None
     _mode = Mode.FIRST_LAST
+    _base_url = ""
+
+    def __init__(self):
+        self._base_url = current_app.config['BASE_OSRM_URL']
 
     def set_points(self, points):
         ''' 
@@ -49,7 +57,6 @@ class TripOptimizerService:
         '''
         self._mode = mode
 
-    
     def _generate_url(self):
         ''' 
             Uses the base url, points, and mode to generate the request URL.
@@ -57,18 +64,13 @@ class TripOptimizerService:
             Returns:
                 string: The generated url 
         '''
-        url = current_app.config['BASE_OSRM_URL']
-        
-        for i, p in enumerate(self._points):
-            url += str(p["lat"]) + "," + str(p["lon"])
-            if i < len(self._points) - 1:
-                url += ";"
+        url = self._base_url
+        url += ";".join([f"{p['lon']},{p['lat']}" for p in self._points])
 
         if self._mode == Mode.FIRST_LAST:
             url += "?source=first&destination=last"
+
         return url
-        
-            
 
     def generate(self):
         ''' 
@@ -79,5 +81,18 @@ class TripOptimizerService:
             Returns:
                 None
         '''
-        return None
+        url = self._generate_url()
+        response = requests.get(url, timeout=60)
+        if response.status_code != 200:
+            raise ServiceException(
+                f"Recived non 200 response from OSRM service: {response.status_code}")
+        try:
+            response_json = response.json()
+            waypoints = response_json["waypoints"]
+            waypoints.sort(key=lambda coord : coord["waypoint_index"])
 
+            sorted_points = [{"lon":w["location"][0], "lat":w["location"][1]} for w in waypoints]
+        except KeyError as error:
+            raise ServiceException("Unable to parse response data") from error
+
+        return sorted_points
