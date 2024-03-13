@@ -37,12 +37,18 @@ class Config():
     JWT_COOKIE_CSRF_PROTECT = True
     JWT_COOKIE_SAMESITE = 'Strict'
 
+    OSRM_PORT = 5000
+    BASE_OSRM_URL = "http://localhost:" + str(OSRM_PORT) + "/trip/v1/driving/"
+
+
 class DevConfig(Config):
     ''' Config for Dev Environment. '''
     DEBUG = True
 
 class TestConfig(Config):
     ''' Config for Test Environment. '''
+    OSRM_PORT = 5050
+    BASE_OSRM_URL = "http://localhost:" + str(OSRM_PORT) + "/trip/v1/driving/"
     TESTING = True
 
 def get_environment():
