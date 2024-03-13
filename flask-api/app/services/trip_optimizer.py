@@ -40,7 +40,7 @@ class TripOptimizerService:
             Sets the points array to be the given points
 
             ARGS:
-                var (type): desc
+                points (List of Dictionaries): The given points to be Parsed into the url
             Returns:
                 None
         '''
@@ -48,10 +48,10 @@ class TripOptimizerService:
 
     def set_mode(self, mode):
         ''' 
-            Sets the points array to be the given points
+            Sets the mode of the trip optimizer to either Round Trip or First and last Destination. 
 
             ARGS:
-                var (type): desc
+                mode (enum): An Enum representing Round Trip or First and Last Destinations.
             Returns:
                 None
         '''
@@ -74,12 +74,11 @@ class TripOptimizerService:
 
     def generate(self):
         ''' 
-            Sets the points array to be the given points
+            Sets the points array to be the given points.
 
-            ARGS:
-                var (type): desc
+            
             Returns:
-                None
+                List: The Parsed and sorted List of Dictionaries containing Lon and Lat of points.
         '''
         url = self._generate_url()
         response = requests.get(url, timeout=60)
