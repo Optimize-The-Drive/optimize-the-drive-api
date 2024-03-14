@@ -47,27 +47,21 @@ def pytest_runtest_makereport(item, call): # pylint: disable=W0613
 
 
 @pytest.fixture
-@pytest.mark.usefixtures("app_ctx")
-def auth_client(request, client):
+def auth_client(client):
     '''
         Logs in an authenticated user to use in other tests.
 
         Returns [client, headers(csrf_token, authorization)]
     '''
-
-    login_data = {
-        'username': 'test-user',
-        'password': 'test-password'
-    }
-
-    if request and getattr(request, 'param', None):
-        username, password = request.param['username'], request.param['password']
+    def _auth_client(username: str = 'test-user', password: str = 'test-password'):
         login_data = {
             'username': username,
             'password': password
         }
+
         response = client.post('/api/auth/login', json=login_data)
 
+        # If the user doesn't exist, register them and reauthenticate
         if response.status_code == 401:
             register_data = {
                 'username': username,
@@ -77,16 +71,17 @@ def auth_client(request, client):
             }
 
             _res = client.post('/api/user/register', json=register_data)
+            response = client.post('/api/auth/login', json=login_data)
 
-    response = client.post('/api/auth/login', json=login_data)
-    access_token = response.json['access_token']
-    csrf_token = client.get_cookie('csrf_refresh_token').value
+        access_token = response.json['access_token']
+        csrf_token = client.get_cookie('csrf_refresh_token').value
 
-    return [client, {'Authorization': f'Bearer {access_token}', 'X-CSRF-TOKEN': csrf_token }]
+        return [client, {'Authorization': f'Bearer {access_token}', 'X-CSRF-TOKEN': csrf_token }]
+
+    return _auth_client
 
 
 @pytest.fixture
-@pytest.mark.usefixtures("app_ctx")
 def user_in_db():
     '''
         Fixture to add a user to the db for a test.

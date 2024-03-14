@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cleanup() {
-    docker compose -f compose.ci.yaml down
+    docker compose -f compose.ci.yaml down 1> /dev/null
     exit 1
 }
 
