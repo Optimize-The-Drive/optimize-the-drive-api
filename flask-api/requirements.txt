@@ -12,3 +12,5 @@ pylint
 pytest
 pytest-cov
 python-dotenv
+requests-mock
+requests
