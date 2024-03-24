@@ -9,8 +9,5 @@ marshmallow
 passlib
 psycopg2-binary
 pylint
-pytest
-pytest-cov
 python-dotenv
-requests-mock
 requests

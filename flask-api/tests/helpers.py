@@ -3,6 +3,7 @@
 '''
 
 import json
+from socketio import Client
 
 from app.models.user import User
 from app.repos.user import UserRepo
@@ -60,3 +61,6 @@ def get_response_body(response) -> dict:
             response body - dict
     '''
     return json.loads(response.data.decode('utf-8'))
+
+
+sio = Client(logger=True, engineio_logger=True)

@@ -2,9 +2,10 @@
 
 from time import time
 import pytest
+from socketio import Client
 
-from app import create_app # pylint: disable=E0401
-from tests.helpers import add_user_to_db
+from app import create_app, socketio # pylint: disable=E0401
+from tests.helpers import add_user_to_db, sio
 
 
 @pytest.fixture(scope='session')
@@ -89,3 +90,16 @@ def user_in_db():
     user = add_user_to_db(f'{time()}-user', f'{time()}@testemail.com', f'{time()}-password')
 
     return user
+
+
+# SocketIO stuff
+@pytest.fixture
+def sio_client(test_app, client):
+    yield socketio.test_client(test_app, flask_test_client=client)
+
+@pytest.fixture
+def auth_sio_client(test_app, auth_client):
+    client, headers = auth_client()
+    auth = {'token': headers['Authorization'].split('Bearer ')[1]}
+
+    yield socketio.test_client(test_app, flask_test_client=client, auth=auth)

@@ -1,0 +1,55 @@
+#!/bin/bash
+FILE_PATH=$(dirname $(realpath -s $0))
+
+cleanup() {
+    docker compose -f compose.ci.yaml down 2> /dev/null || echo "Unable to tear down tests."
+    exit 1
+}
+
+rebuild() {
+    docker compose -f compose.ci.yaml build 2> /dev/null || echo "Unable to build tests."
+}
+
+run_tests() {
+    docker compose -f compose.ci.yaml up --abort-on-container-exit && docker compose -f compose.ci.yaml down
+}
+
+help()
+{
+   # Display Help
+   echo "Runs Optimize The Drive tests."
+   echo
+   echo "Syntax: tests [OPTION]..."
+   echo "OPTIONS:"
+   echo "-h, --help       Show this help message." 
+   echo "-b, --build     (Re)build the test images."
+   echo "-r, --run        Run the tests."
+}
+
+options=$(getopt -o hbr -l help,build,run -n "$0" -- "$@") || exit
+eval set -- "$options"
+
+
+# Parse short options
+# while getopts "hgsea" option; do
+while [[ $1 != -- ]]; do
+   case $1 in
+        -h|--help) # display Help
+            help
+            shift 1
+            ;;
+        -b|--build) # Build tests
+            rebuild
+            shift 1
+            ;;
+        -r|--run) # Run tests
+            run_tests
+            shift 1
+            ;;
+        *) echo "bad option: $1" >&2; exit 1;;
+   esac
+done
+
+trap cleanup SIGINT EXIT SIGKILL
+
+

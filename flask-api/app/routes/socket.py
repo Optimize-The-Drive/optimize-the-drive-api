@@ -3,26 +3,37 @@
 '''
 
 from flask import current_app
-from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
+from flask_jwt_extended import get_jwt_identity, decode_token
 from flask_jwt_extended.exceptions import NoAuthorizationError
 from flask_socketio import emit
-from jwt.exceptions import ExpiredSignatureError
+from jwt.exceptions import DecodeError
 
 from app.extensions import socketio
 
 
 @socketio.on('connect')
-def connect_socket(_auth):
+def connect_socket(auth):
     '''
-        Handles the socket connection / upgrade.
+        Handles the socket connection. Reject if invalid token is passed.
     '''
-    current_user = get_socket_jwt_identity()
-    if not current_user:
-        current_app.logger.info("Not authenticated for socket connection, disconnecting...")
+    socket_token = auth.get('token') if auth else None
+
+    if not socket_token:
+        current_app.logger.info(
+            "No authorization token found in websocket connect, disconnecting..."
+        )
         return False
 
-    current_app.logger.info("Socket connection created")
-    return True
+    try:
+        decode_token(socket_token)
+        current_user = get_jwt_identity()
+
+        return current_user is not None
+    except (NoAuthorizationError, DecodeError):
+        current_app.logger.info(
+            "Invalid token found in websocket connect, disconnecting..."
+        )
+        return False
 
 
 @socketio.on('disconnect')
@@ -46,19 +57,3 @@ def generate_route(json_data):
     }
 
     emit('generate_route_res', faux_response_data)
-
-
-
-def get_socket_jwt_identity():
-    '''
-        Returns the user making the socket request.
-        
-        RETURNS:
-            User or None: The user 
-    '''
-    try:
-        verify_jwt_in_request()
-    except (NoAuthorizationError, ExpiredSignatureError):
-        return None
-
-    return get_jwt_identity()
