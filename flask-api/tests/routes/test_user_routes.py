@@ -152,11 +152,6 @@ def test_user_exists(client):
 
 
 ########## USER DELETE ##############
-@pytest.mark.parametrize(
-    'auth_client',
-    [{'username': 'testuserdelete', 'password': 'Testuserdeletepassword1!'}],
-    indirect=True
-)
 @pytest.mark.usefixtures("app_ctx")
 def test_user_delete(auth_client):
     '''
@@ -164,7 +159,7 @@ def test_user_delete(auth_client):
         
         DELETE /api/user/me
     '''
-    client, headers = auth_client
+    client, headers = auth_client('testuserdelete', 'Testuserdeletepassword1!')
 
     response = client.delete('/api/user/me', headers={'Authorization': headers['Authorization']})
     response1 = client.post('/api/auth/logout', headers={'Authorization': headers['Authorization']})
@@ -186,11 +181,6 @@ def test_user_delete_guarded(client):
 
 
 ############## USER GET #################
-@pytest.mark.parametrize(
-    'auth_client',
-    [{'username': 'user_get', 'password': 'Usergetpassword1!'}],
-    indirect=True
-)
 @pytest.mark.usefixtures("app_ctx")
 def test_user_get(auth_client):
     '''
@@ -198,7 +188,7 @@ def test_user_get(auth_client):
 
         GET /api/user/me
     '''
-    client, headers = auth_client
+    client, headers = auth_client('user_get', 'Usergetpassword1!')
 
     response = client.get('/api/user/me', headers={'Authorization': headers['Authorization']})
     me = get_response_body(response)['user']

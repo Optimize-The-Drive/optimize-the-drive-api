@@ -55,7 +55,7 @@ def test_refresh(auth_client):
         
         POST /api/auth/refresh
     '''
-    client, headers = auth_client
+    client, headers = auth_client()
 
     res = client.post('/api/auth/refresh', headers={'X-CSRF-TOKEN': headers['X-CSRF-TOKEN']})
     access = res.json['access_token']
@@ -81,7 +81,7 @@ def test_logout(auth_client):
         
         POST /api/auth/logout
     '''
-    client, headers = auth_client
+    client, headers = auth_client()
 
     res = client.post('/api/auth/logout', headers={'Authorization': headers['Authorization']})
 

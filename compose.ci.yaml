@@ -3,11 +3,13 @@ version: '3'
 
 services:
   api:
+    build:
+      context: flask-api/
+      dockerfile: ./Dockerfile.test
     image: flask-api-test
     container_name: flask-api-test
     entrypoint: '/app/entrypoint.test.sh'
     command: pytest /app/tests/ -s -v
-    build: 'flask-api/'
     ports:
       - '5002:5000'
     environment:

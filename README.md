@@ -27,7 +27,7 @@ To run the lint, ensure you have installed the virtual environment setup.
 ### Running Tests
 Running the tests is very simple. A separate docker configuration is included for running them:
 ```
-./run_tests.sh
+./tests --build --run
 ```
 
 ### Creating and Running Migrations

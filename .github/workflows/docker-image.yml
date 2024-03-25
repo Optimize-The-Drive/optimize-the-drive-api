@@ -30,7 +30,7 @@ jobs:
         sed -i 's/POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}/' flask-api/.env.test
         sed -i 's/JWT_SECRET_KEY=.*/JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}/' flask-api/.env.test
     - name: Build and Run Tests
-      run: ./run_tests.sh
+      run: ./tests --build --run
 
   Audit:
     runs-on: ubuntu-latest

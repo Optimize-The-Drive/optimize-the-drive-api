@@ -5,6 +5,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
+from flask_socketio import SocketIO
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import MetaData
 
@@ -27,3 +28,6 @@ jwt = JWTManager()
 
 # Migration manager
 migrate = Migrate()
+
+# Socket IO
+socketio = SocketIO()

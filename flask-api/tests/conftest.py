@@ -2,9 +2,10 @@
 
 from time import time
 import pytest
+from socketio import Client
 
-from app import create_app # pylint: disable=E0401
-from tests.helpers import add_user_to_db
+from app import create_app, socketio # pylint: disable=E0401
+from tests.helpers import add_user_to_db, sio
 
 
 @pytest.fixture(scope='session')
@@ -47,27 +48,21 @@ def pytest_runtest_makereport(item, call): # pylint: disable=W0613
 
 
 @pytest.fixture
-@pytest.mark.usefixtures("app_ctx")
-def auth_client(request, client):
+def auth_client(client):
     '''
         Logs in an authenticated user to use in other tests.
 
         Returns [client, headers(csrf_token, authorization)]
     '''
-
-    login_data = {
-        'username': 'test-user',
-        'password': 'test-password'
-    }
-
-    if request and getattr(request, 'param', None):
-        username, password = request.param['username'], request.param['password']
+    def _auth_client(username: str = 'test-user', password: str = 'test-password'):
         login_data = {
             'username': username,
             'password': password
         }
+
         response = client.post('/api/auth/login', json=login_data)
 
+        # If the user doesn't exist, register them and reauthenticate
         if response.status_code == 401:
             register_data = {
                 'username': username,
@@ -77,16 +72,17 @@ def auth_client(request, client):
             }
 
             _res = client.post('/api/user/register', json=register_data)
+            response = client.post('/api/auth/login', json=login_data)
 
-    response = client.post('/api/auth/login', json=login_data)
-    access_token = response.json['access_token']
-    csrf_token = client.get_cookie('csrf_refresh_token').value
+        access_token = response.json['access_token']
+        csrf_token = client.get_cookie('csrf_refresh_token').value
 
-    return [client, {'Authorization': f'Bearer {access_token}', 'X-CSRF-TOKEN': csrf_token }]
+        return [client, {'Authorization': f'Bearer {access_token}', 'X-CSRF-TOKEN': csrf_token }]
+
+    return _auth_client
 
 
 @pytest.fixture
-@pytest.mark.usefixtures("app_ctx")
 def user_in_db():
     '''
         Fixture to add a user to the db for a test.
@@ -94,3 +90,16 @@ def user_in_db():
     user = add_user_to_db(f'{time()}-user', f'{time()}@testemail.com', f'{time()}-password')
 
     return user
+
+
+# SocketIO stuff
+@pytest.fixture
+def sio_client(test_app, client):
+    yield socketio.test_client(test_app, flask_test_client=client)
+
+@pytest.fixture
+def auth_sio_client(test_app, auth_client):
+    client, headers = auth_client()
+    auth = {'token': headers['Authorization'].split('Bearer ')[1]}
+
+    yield socketio.test_client(test_app, flask_test_client=client, auth=auth)

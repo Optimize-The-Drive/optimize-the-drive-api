@@ -3,13 +3,11 @@ Flask-SQLAlchemy
 Flask-Smorest
 Flask-JWT-Extended
 flask-migrate
+flask-socketio
 gunicorn
 marshmallow
 passlib
 psycopg2-binary
 pylint
-pytest
-pytest-cov
 python-dotenv
-requests-mock
 requests
