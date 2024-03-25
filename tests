@@ -2,16 +2,19 @@
 FILE_PATH=$(dirname $(realpath -s $0))
 
 cleanup() {
+    echo "Cleaning up tests..."
     docker compose -f compose.ci.yaml down 2> /dev/null || echo "Unable to tear down tests."
-    exit 1
+    echo "Done"
 }
+
+trap cleanup EXIT
 
 rebuild() {
     docker compose -f compose.ci.yaml build 2> /dev/null || echo "Unable to build tests."
 }
 
 run_tests() {
-    docker compose -f compose.ci.yaml up --abort-on-container-exit && docker compose -f compose.ci.yaml down
+    docker compose -f compose.ci.yaml up --abort-on-container-exit
 }
 
 help()
@@ -49,7 +52,4 @@ while [[ $1 != -- ]]; do
         *) echo "bad option: $1" >&2; exit 1;;
    esac
 done
-
-trap cleanup SIGINT EXIT SIGKILL
-
 
