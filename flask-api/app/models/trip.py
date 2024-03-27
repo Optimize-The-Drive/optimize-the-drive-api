@@ -51,6 +51,8 @@ class Trip(db.Model, BaseModel):
             
             ARGS:
                 name (str): The route's name
+                description (str): the route's description
+                user_id (int): The ID of the user the trip belongs to.
             returns:
                 Trip - the created trip.
         '''
@@ -59,6 +61,7 @@ class Trip(db.Model, BaseModel):
         if 'name' in kwargs and 'user_id' in kwargs:
             trip.name = kwargs.get('name')
             trip.user_id = kwargs.get('user_id')
+            trip.description = kwargs.get('description', None)
         else:
             raise ModelException('Missing name parameter.')
         return trip

@@ -1,13 +1,33 @@
-from tests.helpers import sio
+"""Defines trip route tests"""
 
-def test_unauthorized(sio_client):
-    """
-        Tests that the client can't access SocketIO without credentials.
-    """
-    assert not sio_client.is_connected()
+from tests.helpers import get_response_body
 
-def test_message(auth_sio_client):
+def test_trip_create_guarded(client):
     """
-        Tests that the client can access SocketIO with the correct credentials.
+        Tests that the trip create route is protected.
+
+        POST /api/trip/
     """
-    assert auth_sio_client.is_connected()
+
+    res = client.post('/api/trip/', json={"name": "test", "description": "shouldn't work"})
+
+    assert res.status_code == 401
+    
+def test_trip_create(auth_client):
+    """
+        Tests that the trip create route works.
+        
+        POST /api/trip
+    """
+
+    client, headers = auth_client()
+
+    example_trip = {
+        "name": "trip_one",
+        "description": "this is trip_one's description"
+    }
+
+    res = client.post('/api/trip/', headers={'Authorization': headers['Authorization']}, json=example_trip)
+    res_route = get_response_body(res)
+
+    assert res.status_code == 201
