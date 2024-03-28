@@ -35,7 +35,7 @@ def test_by_user_id():
 @pytest.mark.usefixtures("app_ctx")
 def test_by_id():
     '''
-        Tests that a Trip can be queried its id
+        Tests that a Trip can be queried by its id
     '''
 
     user = add_user_to_db('user_test_trip', 'user_test_trip@email.com', 'testpassword')
