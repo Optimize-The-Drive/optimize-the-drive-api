@@ -4,7 +4,7 @@
 ### Development Setup
 _Note: It's recommend to use an Enterprise Linux distrubtion for the development of this application. Currently we are using Rocky Linux 9._
 
-- Ensure Docker and Python 3 are installed
+- Ensure Docker, Python 3 and [Nix package manager](https://nixos.org/download/) are installed.
 - Spin up the API service: 
     ```
     docker compose -f compose.dev.yaml build
@@ -13,6 +13,12 @@ _Note: It's recommend to use an Enterprise Linux distrubtion for the development
 - Start up the OSRM server:
     ```
     osrm-service/start-service.sh
+    ```
+- Start the Frontend:
+    ```
+        nix-shell
+        cd frontend/ && npm install
+        npm start
     ```
 
 - Since we are using docker for development, there isn't an easy way to get local linting, so it's recommended to install   **venv** in the root directory of the project and install all dependencies there.
