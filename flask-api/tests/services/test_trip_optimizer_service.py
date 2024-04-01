@@ -40,16 +40,21 @@ def test_set_points_throws(db_trip):
     '''
     service = TripOptimizerService()
     test_id = db_trip.id
-    test_trip = {"points": [], "mode": 123, "trip_id": test_id}
-    test_trip1 = {"points": test_points, "mode": TripMode.FIRST_LAST, "trip_id": -1}
+    test_trip = {"points": [], "mode": TripMode.FIRST_LAST, "trip_id": test_id}
+    test_trip1 = {"points": test_points, "mode": -1, "trip_id": test_id}
+    test_trip2 = {"points": test_points, "mode": TripMode.FIRST_LAST, "trip_id": -1}
 
-    # less than 3 points, mode incorrect
+    # less than 3 points
     with pytest.raises(ServiceException):
         service.set_trip(test_trip)
-
-    # Invalid user
+       
+    # Invalid mode
     with pytest.raises(ServiceException):
         service.set_trip(test_trip1)
+
+    # User doesn't exist
+    with pytest.raises(ServiceException):
+        service.set_trip(test_trip2)
 
 
 @pytest.mark.usefixtures("app_ctx")

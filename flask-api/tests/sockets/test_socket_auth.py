@@ -1,3 +1,7 @@
+'''
+    Define socket auth tests.
+'''
+
 from tests.helpers import sio
 
 

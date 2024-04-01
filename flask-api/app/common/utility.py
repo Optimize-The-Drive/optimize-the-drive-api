@@ -38,11 +38,11 @@ def create_socket_res(message, status: SocketStatus) -> dict:
         Creates a generic message for a SocketIO response
 
         ARGS:
-            message (strr): message to encapsulate.
-            code (int): Status code.
+            message (str): message to encapsulate.
+            status (int): Status.
             
         RETURNS:
-            Dict { code: <code>, msg: <message>} - The constructed message
+            Dict { status: <status>, msg: <message>} - The constructed message
     '''
     return {
         "status": status,
