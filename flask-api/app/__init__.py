@@ -6,10 +6,10 @@ import traceback
 from flask import Flask, request, g
 from werkzeug.exceptions import default_exceptions
 
+import app.models
+import app.socket
+
 from app.routes import api_routes
-from app.models.user import User
-from app.models.jwt import JWT
-from app.models.trip import Trip
 from app.common.errors import SchemaException
 from app.common.logger import configure_logger, log_details
 from app.common.utility import create_server_res
@@ -95,7 +95,11 @@ def register_error_routes(app: Flask):
 
     @socketio.on_error()
     def error_handler(error):
-        app.logger.error(log_details(f'{error.args}'))
+        '''
+            Catch-all error handler for socket io. Catches any error that is not handled above.
+        '''
+        app.logger.error(type(error))
+        app.logger.error(''.join(traceback.format_exception(None, error, error.__traceback__)))
 
     @app.errorhandler(Exception)
     def server_error(error):

@@ -3,91 +3,120 @@
 '''
 import pytest
 import requests_mock
-from app.services.trip_optimizer import TripOptimizerService, Mode
+
+from app.common.errors import ServiceException, SchemaException
+from app.services.trip_optimizer import TripOptimizerService
+from app.schema.trip import TripMode, TripOptimizeSchema
+
+
+test_points = [
+    {"lon":-83.12345, "lat":40.12345},
+    {"lon":-83.12345, "lat":40.12345},
+    {"lon":-83.12345, "lat":40.12345},
+]
+test_mode = TripMode.FIRST_LAST
 
 @pytest.mark.usefixtures("app_ctx")
-def test_set_points():
+def test_set_points(db_trip):
     '''
-        Tests setting class points array.
+        Tests set_trip
     '''
     service = TripOptimizerService()
-    test_points = [
-        {"lat":-83.12345, "lon":40.12345},
-        {"lat":-83.12345, "lon":40.12345},
-        {"lat":-83.12345, "lon":40.12345},
-        {"lat":-83.12345, "lon":40.12345},
-    ]
+    test_id = db_trip.id
 
-    service.set_points(test_points)
+    test_trip = {"points": test_points, "mode": test_mode, "trip_id": test_id}
+
+    service.set_trip(test_trip)
 
     assert service._points == test_points
+    assert service._mode == test_mode
+    assert service._trip_ref is not None
+
 
 @pytest.mark.usefixtures("app_ctx")
-def test_set_mode():
+def test_set_points_throws(db_trip):
     '''
-        Tests setting class mode.
+        Tests that the set_trip function throws errors.
     '''
     service = TripOptimizerService()
-    test_mode = Mode.ROUND_TRIP
+    test_id = db_trip.id
+    test_trip = {"points": [], "mode": 123, "trip_id": test_id}
+    test_trip1 = {"points": test_points, "mode": TripMode.FIRST_LAST, "trip_id": -1}
 
-    service.set_mode(test_mode)
+    # less than 3 points, mode incorrect
+    with pytest.raises(ServiceException):
+        service.set_trip(test_trip)
 
-    assert service._mode == test_mode
+    # Invalid user
+    with pytest.raises(ServiceException):
+        service.set_trip(test_trip1)
+
 
 @pytest.mark.usefixtures("app_ctx")
-def test_generate_url():
+def test_generate_url(db_trip):
     '''
         Tests Generating URL
     '''
-    test_url_first_last = "http://localhost:5050/trip/v1/driving/-83.12345,40.12345;-83.12345,40.12345?source=first&destination=last"
-    test_url_round_trip = "http://localhost:5050/trip/v1/driving/-83.12345,40.12345;-83.12345,40.12345"
+    test_url_first_last = \
+        "http://osrm:5050/trip/v1/driving/-83.12345,40.12345;-83.12345,40.12345;-83.12345,40.12345?source=first&destination=last"
+    test_url_round_trip =\
+        "http://osrm:5050/trip/v1/driving/-83.12345,40.12345;-83.12345,40.12345;-83.12345,40.12345"
 
     service = TripOptimizerService()
 
     #Set Test Points
-    test_points = [
-        {"lon":-83.12345, "lat":40.12345},
-        {"lon":-83.12345, "lat":40.12345},
-    ]
-    service.set_points(test_points)
+    test_trip = {
+        "points": test_points,
+        "mode": test_mode,
+        "trip_id": db_trip.id
+    }
 
-    #Set Test Mode
-    test_mode = Mode.ROUND_TRIP
-    service.set_mode(test_mode)
-
-    round_trip_url = service._generate_url()
-
-    assert test_url_round_trip == round_trip_url
-
-    test_mode = Mode.FIRST_LAST
-    service.set_mode(test_mode)
+    service.set_trip(test_trip)
 
     first_last_trip_url = service._generate_url()
-
     assert test_url_first_last == first_last_trip_url
 
+    test_trip["mode"] = TripMode.ROUND_TRIP
+    service.set_trip(test_trip)
+
+    round_trip_url = service._generate_url()
+    assert test_url_round_trip == round_trip_url
+
+
 @pytest.mark.usefixtures("app_ctx")
-def test_generate(requests_mock):
-    ''' 
-        Tests Generation of OSRM request
-    '''
-    test_url_first_last = "http://localhost:5050/trip/v1/driving/-83.12345,40.12345;-83.12345,40.12345?source=first&destination=last"
- 
+def test_generate_throws():
+    """
+        Tests that generate throws if no trip has been loaded.
+    """
     service = TripOptimizerService()
 
-    #Set Test Points
-    test_points = [
-        {"lon":-83.12345, "lat":40.12345},
-        {"lon":-75.12345, "lat":35.12345},
-    ]
-    service.set_points(test_points)
+    with pytest.raises(ServiceException):
+        service.generate()
 
-    #Set Test Mode
-    test_mode = Mode.FIRST_LAST
-    service.set_mode(test_mode)
 
-    requests_mock.get(test_url_first_last, json = {"code":"Ok","trips":[{"geometry":"eq{sFdajzN????","legs":[{"steps":[],"summary":"","weight":0,"duration":0,"distance":0},{"steps":[],"summary":"","weight":0,"duration":0,"distance":0}],"weight_name":"routability","weight":0,"duration":0,"distance":0}],"waypoints":[{"waypoint_index":1,"trips_index":0,"hint":"0cE1gOwBBYAjAAAADQAAAA8AAAAbAAAAnTkbQovoZUG_KoZBQWvyQSMAAAANAAAADwAAABsAAAAjAgAAnqIL-1s7ZAIGowv7OjxkAgEAHxLo1vtD","distance":26.300259889,"name":"Brandonway Drive","location":[-83.12345,40.12345]},{"waypoint_index":0,"trips_index":0,"hint":"0cE1gOwBBYAjAAAADQAAAA8AAAAbAAAAnTkbQovoZUG_KoZBQWvyQSMAAAANAAAADwAAABsAAAAjAgAAnqIL-1s7ZAIGowv7OjxkAgEAHxLo1vtD","distance":26.300259889,"name":"Brandonway Drive","location":[-75.12345,35.12345]}]})
+@pytest.mark.usefixtures("app_ctx")
+def test_generate(requests_mock, db_trip):
+    ''' 
+        Tests generate
+    '''
+    test_url_first_last = "http://osrm:5050/trip/v1/driving/-83.12345,40.12345;-83.12345,40.12345;-83.12345,40.12345?source=first&destination=last"
+    service = TripOptimizerService()
 
-    assert [{"lon":-75.12345, "lat":35.12345},
+    test_trip = {
+        "points": test_points,
+        "mode": test_mode,
+        "trip_id": db_trip.id
+    }
+
+    service.set_trip(test_trip)
+    requests_mock.get(test_url_first_last, json = {"code":"Ok","trips":[{"geometry":"eq{sFdajzN??????","legs":[{"steps":[],"summary":"","weight":0,"duration":0,"distance":0},{"steps":[],"summary":"","weight":0,"duration":0,"distance":0},{"steps":[],"summary":"","weight":0,"duration":0,"distance":0}],"weight_name":"routability","weight":0,"duration":0,"distance":0}],"waypoints":[{"waypoint_index":0,"trips_index":0,"hint":"4l01gKn3BIAjAAAADQAAAA8AAAAbAAAAnTkbQovoZUG_KoZBQWvyQSMAAAANAAAADwAAABsAAAAgAgAAnqIL-1s7ZAIGowv7OjxkAgEAHxIbWzSG","distance":26.300259889,"name":"Brandonway Drive","location":[-83.12345,40.12345]},{"waypoint_index":1,"trips_index":0,"hint":"4l01gKn3BIAjAAAADQAAAA8AAAAbAAAAnTkbQovoZUG_KoZBQWvyQSMAAAANAAAADwAAABsAAAAgAgAAnqIL-1s7ZAIGowv7OjxkAgEAHxIbWzSG","distance":26.300259889,"name":"Brandonway Drive","location":[-83.12345,40.12345]},{"waypoint_index":2,"trips_index":0,"hint":"4l01gKn3BIAjAAAADQAAAA8AAAAbAAAAnTkbQovoZUG_KoZBQWvyQSMAAAANAAAADwAAABsAAAAgAgAAnqIL-1s7ZAIGowv7OjxkAgEAHxIbWzSG","distance":26.300259889,"name":"Brandonway Drive","location":[-83.12345,40.12345]}]})
+
+    assert [{"lon":-83.12345, "lat":40.12345},
+            {"lon":-83.12345, "lat":40.12345},
             {"lon":-83.12345, "lat":40.12345}] == service.generate()
+
+    trip_points = db_trip.get_points()
+    
+    assert len(trip_points["points"]) == 3
+    assert trip_points["mode"] == test_mode
     

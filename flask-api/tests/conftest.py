@@ -5,7 +5,10 @@ import pytest
 from socketio import Client
 
 from app import create_app, socketio # pylint: disable=E0401
-from tests.helpers import add_user_to_db, sio
+from tests.helpers import (
+    add_user_to_db, remove_user_from_db,
+    add_trip_to_db, remove_trip_from_db
+)
 
 
 @pytest.fixture(scope='session')
@@ -83,13 +86,35 @@ def auth_client(client):
 
 
 @pytest.fixture
-def user_in_db():
+def db_user():
     '''
-        Fixture to add a user to the db for a test.
+         Fixture to add a user to the db for a test.
     '''
     user = add_user_to_db(f'{time()}-user', f'{time()}@testemail.com', f'{time()}-password')
+    yield user
 
-    return user
+    remove_user_from_db(user)
+
+@pytest.fixture
+def db_trip(db_user):
+    '''
+        Fixture to add a trip to the db for a test.
+    '''
+    trip = add_trip_to_db(f'{time()}-trip', user_id=db_user.id)
+    yield trip
+
+    remove_trip_from_db(trip)
+
+
+
+# @pytest.fixture
+# def user_in_db():
+#     '''
+#         Fixture to add a user to the db for a test.
+#     '''
+#     user = add_user_to_db(f'{time()}-user', f'{time()}@testemail.com', f'{time()}-password')
+
+#     return user
 
 
 # SocketIO stuff

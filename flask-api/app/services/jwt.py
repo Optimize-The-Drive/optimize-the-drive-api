@@ -2,7 +2,6 @@
 
 from datetime import datetime
 
-from flask import current_app
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token
@@ -75,7 +74,7 @@ class JWTService:
             try:
                 jti = token["jti"]
                 jwt_type = JWTType.ACCESS if token["type"] == 'access' else JWTType.REFRESH
-                user_id = token[current_app.config["JWT_IDENTITY_CLAIM"]]
+                user_id = token['sub']
                 expires = datetime.fromtimestamp(token["exp"])
             except KeyError as _error:
                 raise ServiceException('Malformed token passed') from _error

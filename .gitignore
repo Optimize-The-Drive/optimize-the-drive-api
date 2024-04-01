@@ -6,4 +6,5 @@ __pycache__/
 venv/
 .coverage
 pg_data
+osrm_data
 .vscode/

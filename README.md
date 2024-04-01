@@ -5,14 +5,14 @@
 _Note: It's recommend to use an Enterprise Linux distrubtion for the development of this application. Currently we are using Rocky Linux 9._
 
 - Ensure Docker, Python 3 and [Nix package manager](https://nixos.org/download/) are installed.
-- Spin up the API service: 
+- Generate OSRM data (for OSRM service to consume):
+    ```
+        ./generate_osrm
+    ```
+- Spin up the backend service: 
     ```
     docker compose -f compose.dev.yaml build
-    docker compose -f compose.dev.yaml up [-d]
-    ```
-- Start up the OSRM server:
-    ```
-    osrm-service/start-service.sh
+    docker compose -f compose.dev.yaml up [api] [db] [osrm] (can run individual components if needed)
     ```
 - Start the Frontend:
     ```
@@ -33,7 +33,7 @@ To run the lint, ensure you have installed the virtual environment setup.
 ### Running Tests
 Running the tests is very simple. A separate docker configuration is included for running them:
 ```
-./tests --build --run
+./tests [--build] --run
 ```
 
 ### Creating and Running Migrations

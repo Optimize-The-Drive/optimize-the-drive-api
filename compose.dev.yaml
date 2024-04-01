@@ -1,15 +1,12 @@
-# docker-compose.yaml
-version: '3'
-
 services:
   api:
     image: flask-api
     container_name: flask-api
     entrypoint: '/app/entrypoint.sh'
-    command: 'python manage.py run -h 0.0.0.0 --debug'
+    command: 'python manage.py run -h 0.0.0.0 -p 3000 --debug'
     build: 'flask-api/'
     ports:
-      - '5001:5000'
+      - '3000:3000'
     environment:
       PYTHONPATH: /app
     volumes:
@@ -25,4 +22,12 @@ services:
       - '5432:5432'
     volumes:
       - ./pg_data:/var/lib/postgresql/data
-    env_file: ./flask-api/.env  
+    env_file: ./flask-api/.env
+  osrm:
+    image: ghcr.io/project-osrm/osrm-backend
+    container_name: osrm
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./osrm_data:/data
+    command: "osrm-routed --algorithm mld /data/ohio-latest.osrm"
