@@ -95,6 +95,7 @@ def db_user():
 
     remove_user_from_db(user)
 
+
 @pytest.fixture
 def db_trip(db_user):
     '''
@@ -113,6 +114,7 @@ def sio_client(test_app, client):
         Fixture for creating an unauthenticated socketio client.
     '''
     yield socketio.test_client(test_app, flask_test_client=client)
+
 
 @pytest.fixture
 def auth_sio_client(test_app, auth_client):
