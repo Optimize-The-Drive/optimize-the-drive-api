@@ -116,7 +116,7 @@ def test_generate(requests_mock, db_trip):
             {"lon":-83.12345, "lat":40.12345}] == service.generate()
 
     trip_points = db_trip.get_points()
-    
+
     assert len(trip_points["points"]) == 3
     assert trip_points["mode"] == test_mode
     

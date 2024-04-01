@@ -88,7 +88,7 @@ def auth_client(client):
 @pytest.fixture
 def db_user():
     '''
-         Fixture to add a user to the db for a test.
+        Fixture to add a user to the db for a test.
     '''
     user = add_user_to_db(f'{time()}-user', f'{time()}@testemail.com', f'{time()}-password')
     yield user
@@ -106,24 +106,19 @@ def db_trip(db_user):
     remove_trip_from_db(trip)
 
 
-
-# @pytest.fixture
-# def user_in_db():
-#     '''
-#         Fixture to add a user to the db for a test.
-#     '''
-#     user = add_user_to_db(f'{time()}-user', f'{time()}@testemail.com', f'{time()}-password')
-
-#     return user
-
-
 # SocketIO stuff
 @pytest.fixture
 def sio_client(test_app, client):
+    '''
+        Fixture for creating an unauthenticated socketio client.
+    '''
     yield socketio.test_client(test_app, flask_test_client=client)
 
 @pytest.fixture
 def auth_sio_client(test_app, auth_client):
+    '''
+        Fixture for creating an authenticated socketio client.
+    '''
     client, headers = auth_client()
     auth = {'token': headers['Authorization'].split('Bearer ')[1]}
 

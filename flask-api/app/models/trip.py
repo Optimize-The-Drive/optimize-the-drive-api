@@ -92,7 +92,7 @@ class Trip(db.Model, BaseModel):
     def get_points(self):
         '''
             gets the points of the trip.
-s
+
             RETURNS:
                 {mode, points}: Mode and points of the trip
         '''
