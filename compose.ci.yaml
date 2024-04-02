@@ -1,6 +1,3 @@
-# docker-compose.yaml
-version: '3'
-
 services:
   api:
     build:
@@ -9,7 +6,7 @@ services:
     image: flask-api-test
     container_name: flask-api-test
     entrypoint: '/app/entrypoint.test.sh'
-    command: pytest /app/tests/ -s -v
+    command: pytest /app/tests/ -s -vv
     ports:
       - '5002:5000'
     environment:

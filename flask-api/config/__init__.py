@@ -25,7 +25,6 @@ class Config():
 
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
     JWT_TOKEN_LOCATION = ['headers', 'cookies']
-    JWT_IDENTITY_CLAIM = 'sub'
     JWT_ACCESS_TOKEN_EXPIRES = int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES', '900'))
     JWT_REFRESH_TOKEN_EXPIRES = int(os.getenv('JWT_REFRESH_TOKEN_EXPIRES', '2592000'))
 
@@ -38,7 +37,7 @@ class Config():
     JWT_COOKIE_SAMESITE = 'Strict'
 
     OSRM_PORT = 5000
-    BASE_OSRM_URL = "http://localhost:" + str(OSRM_PORT) + "/trip/v1/driving/"
+    BASE_OSRM_URL = f"http://osrm:{OSRM_PORT}/trip/v1/driving/"
 
 
 class DevConfig(Config):
@@ -48,7 +47,7 @@ class DevConfig(Config):
 class TestConfig(Config):
     ''' Config for Test Environment. '''
     OSRM_PORT = 5050
-    BASE_OSRM_URL = "http://localhost:" + str(OSRM_PORT) + "/trip/v1/driving/"
+    BASE_OSRM_URL = f"http://osrm:{OSRM_PORT}/trip/v1/driving/"
     TESTING = True
 
 def get_environment():

@@ -71,4 +71,3 @@ def edit_route(trip_data, trip_id):
     trip_repo.commit()
 
     return {"trip": trip}
-    

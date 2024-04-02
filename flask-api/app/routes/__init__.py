@@ -4,7 +4,6 @@
 '''
 from flask import Blueprint
 
-import app.routes.socket
 from app.common.utility import create_server_res
 from app.routes.auth import auth_routes
 from app.routes.user import user_routes

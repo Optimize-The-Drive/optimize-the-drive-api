@@ -4,29 +4,19 @@
 
 import pytest
 
-from app.models.user import User
-from tests.helpers import remove_user_from_db, user_repo
+from tests.helpers import user_repo
 
 @pytest.mark.usefixtures("app_ctx")
-def test_by_username_and_id():
+def test_by_username_and_id(db_user):
     '''
         Tests that a User can be queried by its username and id.
     '''
-
-    user = User.create(username='test_user', email='test@email.com')
-    user.set_password('test_password')
-
-    user_repo.add(user)
-    user_repo.commit()
-
-    queried_user = user_repo.by_username(user.username)
-    queried_user_one = user_repo.by_id(user.id)
-    queried_user_two = user_repo.by_email(user.email)
+    queried_user = user_repo.by_username(db_user.username)
+    queried_user_one = user_repo.by_id(db_user.id)
+    queried_user_two = user_repo.by_email(db_user.email)
 
     assert (
-        queried_user.username == user.username and
-        queried_user_one.username == user.username and
-        queried_user_two.username == user.username
+        queried_user.username == db_user.username and
+        queried_user_one.username == db_user.username and
+        queried_user_two.username == db_user.username
     )
-
-    remove_user_from_db(user)

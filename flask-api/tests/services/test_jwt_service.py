@@ -6,44 +6,36 @@ import pytest
 
 from flask_jwt_extended import decode_token
 
-from tests.helpers import add_user_to_db, remove_user_from_db, jwt_service
+from tests.helpers import jwt_service
 
 
 @pytest.mark.usefixtures("app_ctx")
-def test_access_refresh_create():
+def test_access_refresh_create(db_user):
     '''
         Tests access and refresh token creation.
     '''
-    user = add_user_to_db('usertwo', '21@email.com', 'testpassword')
-    tokens = jwt_service.generate_access_refresh(user.id)
+    tokens = jwt_service.generate_access_refresh(db_user.id)
 
     assert tokens.get('access') and tokens.get('refresh')
 
-    remove_user_from_db(user)
-
 
 @pytest.mark.usefixtures("app_ctx")
-def test_access_create():
+def test_access_create(db_user):
     '''
         Tests access token creation.
     '''
-    user = add_user_to_db('usertwo', '21@email.com', 'testpassword')
-    tokens = jwt_service.generate_access_refresh(user.id)
-
-    access = jwt_service.generate_access(tokens['refresh'], user.id)
+    tokens = jwt_service.generate_access_refresh(db_user.id)
+    access = jwt_service.generate_access(tokens['refresh'], db_user.id)
 
     assert access
 
-    remove_user_from_db(user)
-
 
 @pytest.mark.usefixtures("app_ctx")
-def test_token_blacklist():
+def test_token_blacklist(db_user):
     '''
         Tests token blacklisting.
     '''
-    user = add_user_to_db('usertwo', '21@email.com', 'testpassword')
-    tokens = jwt_service.generate_access_refresh(user.id)
+    tokens = jwt_service.generate_access_refresh(db_user.id)
 
     decoded_access = decode_token(tokens['access'])
     decoded_refresh = decode_token(tokens['refresh'])

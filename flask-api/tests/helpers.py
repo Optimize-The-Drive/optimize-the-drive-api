@@ -5,7 +5,7 @@
 import json
 from socketio import Client
 
-from app.models.user import User
+from app.models import User, Trip
 from app.repos.user import UserRepo
 from app.repos.jwt import JWTRepo
 from app.repos.trip import TripRepo
@@ -48,6 +48,35 @@ def remove_user_from_db(user: User):
     '''
     user_repo.delete(user)
     user_repo.commit()
+
+
+def add_trip_to_db(name, user_id, description=""):
+    '''
+        Adds a trip to the database.
+
+        ARGS:
+            name (str): The name  of the trip
+            user_id (int): The id of the trip's user
+            description (str): The description of the trip
+        RETURNS:
+            User - the created trip.
+    '''
+    trip = Trip.create(name=name, user_id=user_id, description=description)
+    trip_repo.add(trip)
+    trip_repo.commit()
+
+    return trip
+
+
+def remove_trip_from_db(trip: Trip):
+    '''
+        Removes a trip from the database.
+
+        ARGS:
+            Trip (trip): The trip to remove
+    '''
+    trip_repo.delete(trip)
+    trip_repo.commit()
 
 
 def get_response_body(response) -> dict:
