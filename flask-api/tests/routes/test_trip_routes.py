@@ -195,3 +195,4 @@ def test_trip_not_found(auth_client):
     )
 
     assert forbidden_res.status_code == 404
+

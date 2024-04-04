@@ -1,8 +1,10 @@
 """Defines the Trip routes"""
-from flask import abort
+from flask import abort, current_app
 from flask_jwt_extended import jwt_required, get_current_user
 from flask_smorest import Blueprint
 
+from app.common.utility import create_server_res
+from app.common.logger import log_details
 from app.schema.trip import TripCreateSchema, TripResultSchema, TripEditSchema
 from app.models.trip import Trip
 from app.repos import trip_repo
@@ -71,3 +73,26 @@ def edit_route(trip_data, trip_id):
     trip_repo.commit()
 
     return {"trip": trip}
+
+@trip_routes.delete('/<int:trip_id>')
+@jwt_required()
+def delete_route(trip_id):
+    """_summary_
+
+    Args:
+        trip_id (_type_): _description_
+    """
+    user = get_current_user()
+    trip: Trip = trip_repo.by_id(trip_id)
+
+    if not trip:
+        abort(404, description="Trip not found.")
+
+    if trip.user_id != user.id:
+        abort(403, description="You don't have access to this resource.")
+
+    trip_repo.delete(trip)
+    trip_repo.commit()
+    current_app.logger.info(log_details('User deleted trip.'))
+
+    return create_server_res('Trip deleted successfully.', 200)
