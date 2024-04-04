@@ -196,3 +196,35 @@ def test_trip_not_found(auth_client):
 
     assert forbidden_res.status_code == 404
 
+def test_delete_trip(auth_client):
+    """_summary_
+
+    Args:
+        auth_client (_type_): _description_
+    """
+    return None
+
+def test_delete_trip_forbidden(auth_client):
+    """
+
+    Args:
+        auth_client (_type_): _description_
+    """
+    return None
+
+def test_delete_trip_not_found(auth_client):
+    """_summary_
+
+    Args:
+        auth_client (_type_): _description_
+    """
+    return None
+
+def test_delete_trip_guarded(auth_client):
+    """_summary_
+
+    Args:
+        auth_client (_type_): _description_
+    """
+    return None
+
