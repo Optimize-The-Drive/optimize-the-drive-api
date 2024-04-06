@@ -77,8 +77,10 @@ def edit_route(trip_data, trip_id):
 @trip_routes.delete('/<int:trip_id>')
 @jwt_required()
 def delete_route(trip_id):
-    """_summary_
-
+    """
+        Deletes a route.
+        
+        Returns 200
     Args:
         trip_id (_type_): _description_
     """
