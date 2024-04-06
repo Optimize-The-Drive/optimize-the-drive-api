@@ -1,17 +1,89 @@
 """Defines trip route tests"""
 
 import pytest
-from tests.helpers import get_response_body
+from tests.helpers import get_response_body, trip_repo
 
-def test_trip_create_guarded(client):
+
+def test_trip_guarded(client):
     """
-        Tests that the trip create route is protected.
+        Tests that the trip endpoints are guarded.
 
         POST /api/trip/
+        PATCH /api/trip/<id>
+        DELETE /api/trip/<id>
     """
     res = client.post('/api/trip/', json={"name": "test", "description": "shouldn't work"})
+    res1 = client.patch('/api/trip/1', json={"name": "test", "description": "shouldn't work"})
+    res2 = client.delete('/api/trip/1')
 
     assert res.status_code == 401
+    assert res1.status_code == 401
+    assert res2.status_code == 401
+
+
+def test_trip_not_found(auth_client):
+    """
+        Tests that the route returns not found if calling test routes.
+
+        PATCH /api/trip/<id>
+        GET /api/trip/<id>
+    """
+    client, headers = auth_client("tripEditUser1", "Password1!")
+
+    not_found = client.patch(
+        "/api/trip/11111111111",
+        json={"name": "asdf"},
+        headers={'Authorization': headers['Authorization']}
+    )
+
+    not_found1 = client.delete(
+        "/api/trip/11111111111",
+        headers={'Authorization': headers['Authorization']}
+    )
+
+    assert not_found.status_code == 404
+    assert not_found1.status_code == 404
+
+
+def test_trip_forbidden(auth_client):
+    """
+        Tests that a user can't modify or delete a trip that doesn't belong to them.
+        
+        PATCH /api/trip/<id> 
+    """
+    client, headers = auth_client("tripEditUser1", "Password1!")
+    trip = {
+        "name": "trip", "description": ""
+    }
+
+    res = client.post(
+        '/api/trip/',
+        json=trip,
+        headers={'Authorization': headers['Authorization']}
+    )
+    trip_id = get_response_body(res)["trip"]["id"]
+
+    # Login as a different user and try to edit the above trip
+    client1, headers1 = auth_client("tripEditUser2", "Password1!")
+
+    trip_edit = {
+        "name": "not allowed",
+        "description": "not allowed"
+    }
+
+    forbidden_res = client1.patch(
+        f"/api/trip/{trip_id}",
+        json=trip_edit,
+        headers={'Authorization': headers1['Authorization']}
+    )
+
+    forbidden_res1 = client1.delete(
+        f"/api/trip/{trip_id}",
+        headers={'Authorization': headers1['Authorization']}
+    )
+
+    assert forbidden_res.status_code == 403
+    assert forbidden_res1.status_code == 403
 
 
 def test_trip_create(auth_client):
@@ -99,17 +171,6 @@ def test_trip_create_validation(auth_client):
     assert res.status_code == 201
 
 
-def test_trip_edit_guarded(client):
-    """
-        Tests that the trip edit route is protected.
-
-        POST /api/trip/
-    """
-    res = client.patch('/api/trip/1', json={"name": "test", "description": "shouldn't work"})
-
-    assert res.status_code == 401
-
-
 def test_trip_edit(auth_client):
     """
         Tests that the trip edit route works.
@@ -145,13 +206,15 @@ def test_trip_edit(auth_client):
     assert updated_trip['description'] == updated_trip_res['description']
 
 
-def test_trip_forbidden(auth_client):
+@pytest.mark.usefixtures("app_ctx")
+def test_delete_trip(auth_client):
     """
-        Tests that a user can't modify a trip that doesn't belong to them.
+        Tests that the delete trip works correctly
         
-        PATCH /api/trip/<id> 
+        DELETE /api/trip/<id>
     """
-    client, headers = auth_client("tripEditUser1", "Password1!")
+    client, headers = auth_client("tripDelete1", "Password1!")
+
     trip = {
         "name": "trip", "description": ""
     }
@@ -163,68 +226,12 @@ def test_trip_forbidden(auth_client):
     )
     trip_id = get_response_body(res)["trip"]["id"]
 
-    # Login as a different user and try to edit the above trip
-    client1, headers1 = auth_client("tripEditUser2", "Password1!")
-
-    trip_edit = {
-        "name": "not allowed",
-        "description": "not allowed"
-    }
-
-    forbidden_res = client1.patch(
+    res = client.delete(
         f"/api/trip/{trip_id}",
-        json=trip_edit,
-        headers={'Authorization': headers1['Authorization']}
-    )
-
-    assert forbidden_res.status_code == 403
-
-
-def test_trip_not_found(auth_client):
-    """
-        Tests that the route returns not found if updating a non-existent route
-        
-        PATCH /api/trip/<id> 
-    """
-    client, headers = auth_client("tripEditUser1", "Password1!")
-
-    forbidden_res = client.patch(
-        "/api/trip/11111111111",
-        json={"name": "asdf"},
         headers={'Authorization': headers['Authorization']}
     )
 
-    assert forbidden_res.status_code == 404
+    trip = trip_repo.by_id(trip_id)
 
-def test_delete_trip(auth_client):
-    """_summary_
-
-    Args:
-        auth_client (_type_): _description_
-    """
-    return None
-
-def test_delete_trip_forbidden(auth_client):
-    """
-
-    Args:
-        auth_client (_type_): _description_
-    """
-    return None
-
-def test_delete_trip_not_found(auth_client):
-    """_summary_
-
-    Args:
-        auth_client (_type_): _description_
-    """
-    return None
-
-def test_delete_trip_guarded(auth_client):
-    """_summary_
-
-    Args:
-        auth_client (_type_): _description_
-    """
-    return None
-
+    assert res.status_code == 200 
+    assert trip is None
