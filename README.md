@@ -5,6 +5,7 @@
 _Note: It's recommend to use an Enterprise Linux distrubtion for the development of this application. Currently we are using Rocky Linux 9._
 
 - Ensure Docker, Python 3 and [Nix package manager](https://nixos.org/download/) are installed.
+- Create **.env** and **.env.test** using **env.example** (Fill in blanks).
 - Generate OSRM data (for OSRM service to consume):
     ```
         ./generate_osrm
@@ -40,3 +41,12 @@ Running the tests is very simple. A separate docker configuration is included fo
 * To create a migration script with latest changes: `docker exec -it flask-api flask db migrate`
 * To upgrade to the next migration: `docker exec -it flask-api flask db upgrade`
 * To revert back to the previous migration: `docker exec -it flask-api flask db downgrade`
+
+### Accessing the Test Database
+```
+    # Drop into the DB container
+    docker exec -it otd-db bash
+
+    # Access the Postgres DB
+    psql -d otd-dev -U otd
+```
