@@ -1,11 +1,11 @@
 { pkgs ? import (fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/refs/tags/23.11.tar.gz";
+    url = "https://github.com/NixOS/nixpkgs/archive/refs/tags/24.05.tar.gz";
 }
 ) {} }:
 
 pkgs.mkShell {
   buildInputs = [
-    pkgs.nodejs_20
+    pkgs.nodejs_22
     pkgs.yarn
   ];
 

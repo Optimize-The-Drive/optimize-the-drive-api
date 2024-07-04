@@ -1,0 +1,54 @@
+.page {
+    height: 100%;
+}
+
+.left-side {
+    width: 60%;
+    background: linear-gradient(to bottom, rgb(121, 144, 226), rgb(51, 75, 210));
+
+    .content {
+        margin: 2rem;
+
+        h1,
+        p {
+            color: #fafafa;
+        }
+    }
+}
+
+.right-side {
+    width: auto;
+    flex: 1 1 auto;
+    margin: 0.5rem;
+
+    .login-panel {
+        min-width: 20em;
+        width: 60%;
+        max-width: 40em;
+        padding: 0.5em;
+    }
+
+    .forgot-password {
+        margin-top: -.5em;
+        margin-bottom: 3em;
+        text-align: end;
+        font-size: 14px;
+    }
+
+    .create-account {
+        font-size: 14px;
+        margin: 1em;
+        text-align: center;
+    }
+
+    .welcome {
+        text-align: center;
+        margin-bottom: 0.5em;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    .left-side {
+        display: none;
+    }
+}
