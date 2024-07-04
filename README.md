@@ -18,7 +18,7 @@ _Note: It's recommend to use an Enterprise Linux distrubtion for the development
 - Start the Frontend:
     ```
         nix-shell
-        cd frontend/ && npm install
+        cd frontend/ && yarn install
         npm run dev
     ```
 
