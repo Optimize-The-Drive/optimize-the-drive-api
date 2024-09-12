@@ -30,14 +30,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles/styles.scss"
             ],
-            "scripts": [],
-            "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -95,15 +90,26 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles/styles.scss"
             ],
             "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
     }
   },
   "cli": {
-    "analytics": false
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   }
 }

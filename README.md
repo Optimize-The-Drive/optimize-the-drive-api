@@ -18,8 +18,8 @@ _Note: It's recommend to use an Enterprise Linux distrubtion for the development
 - Start the Frontend:
     ```
         nix-shell
-        cd frontend/ && npm install
-        npm start
+        cd frontend/ && yarn install
+        npm run dev
     ```
 
 - Since we are using docker for development, there isn't an easy way to get local linting, so it's recommended to install   **venv** in the root directory of the project and install all dependencies there.

@@ -26,4 +26,3 @@ def generate_trip(json_trip):
             res_event,
             create_socket_res("Error optimizing route", SocketStatus.ERROR)
         )
-        return
