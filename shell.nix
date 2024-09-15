@@ -7,6 +7,8 @@ pkgs.mkShell {
   buildInputs = [
     pkgs.nodejs_22
     pkgs.yarn
+    pkgs.python311
+    pkgs.docker
   ];
 
   shellHook = ''
